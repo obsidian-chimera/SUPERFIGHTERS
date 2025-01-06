@@ -8,4 +8,5 @@ def game_loop(game_state):
         pyg.time.Clock().tick(250) #This is used to cap the frame rate to minimise unnecessary system resource usage
 
 def game_state_update():
-    #Unsure as to how to implement this as of yet - more research is needed
+    return 
+    #Unsure as to how to implement this as of yet - more research is need
