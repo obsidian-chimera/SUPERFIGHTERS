@@ -1,6 +1,6 @@
 # SUPERFIGHTERS GAME
 ## AIM
-This project aims at highlighting my coding skills and proficiency at using Github and the Git version control to develop my OCR A Level Computer Science NEA Project.
+This project aims at highlighting my coding skills and proficiency at using Github and Git version control to develop my OCR A Level Computer Science NEA Project.
 
 ## What is it?
 Superfighters is a retro arcade game that is a 2D fighter with bots and perhaps 2 player?
