@@ -1,7 +1,5 @@
 import pygame as pyg
 
-game_state = bool(False)
-
 def game_loop(game_state):
     while game_state:
         pyg.display.flip() #This updates the display
