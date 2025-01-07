@@ -5,8 +5,7 @@ def init():
     pyg.font.init() #Initialise the fonts I want to use
     display_list = pyg.display.get_desktop_sizes() #Obtains resolutions of all the displays
     screen = pyg.display.set_mode(display_list[0],flags=pyg.FULLSCREEN,depth=0,display=0,vsync=0) #A bit more complex here in that it renders the display to my monitor's resolution, 
-
-init()
+    pyg.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
 
     # #A few more comments to explain the above:
     # #Essentially, the first part sets the resolution of the default display, the second part is a flag that ensures that it is fullscreen, the third enables the correct colours to be used, the fourth enables the default display to be selected, whilst the last one turns off Vsync
