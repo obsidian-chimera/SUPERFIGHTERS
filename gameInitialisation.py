@@ -8,7 +8,7 @@ def init():
     #A few more comments to explain the above:
     #Essentially, the first part sets the resolution of the default display, the second part is a flag that ensures that it is fullscreen, the third enables the correct colours to be used, the fourth enables the default display to be selected, whilst the last one turns off Vsync
     main_menu = pyg_m.Menu("START",1920,1080, theme=pyg_m.themes.THEME_BLUE,) 
-    #main_menu.add_button("START","GAME STARTED")
+    main_menu.add_button("START","GAME STARTED")
     clock = pyg.time.Clock #Creates an object called clock to track time
     title_font = pyg.font.SysFont("Arial",40,True) #Added the titlefont
     #pyg.set_caption("Menu") #Sets the title of the window to "Game"
