@@ -1,6 +1,6 @@
 import pygame
 from init import init
-from gameLoopUpdate import game_loop
+from loop import game_loop
 
 game_state = bool(False)
 
