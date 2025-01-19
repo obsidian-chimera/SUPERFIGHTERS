@@ -6,6 +6,8 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
+display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
+resolution = display_list[0]
 
 class Button:
     def __init__(self, text, position, size, colour):
@@ -30,12 +32,12 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
-        self.rect.center = (1920 // 2, 1080 // 2)
+        self.rect.center = (resolution[0] // 2, resolution[1] // 2)
 
     def update(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x -= 5
-        if keys[pygame.K_RIGHT] and self.rect.right < 1920:
+        if keys[pygame.K_RIGHT] and self.rect.right < resolution[0]:
             self.rect.x += 5
 
 # Enemy sprite class
@@ -45,12 +47,12 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.Surface((50, 50))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
-        self.rect.topleft = (random.randint(0,1920), y)
+        self.rect.topleft = (random.randint(0,resolution[0]), y)
 
     def update(self):
         self.rect.y += 3
-        if self.rect.top > 1080:
+        if self.rect.top > resolution[1]:
             self.rect.bottom = 0
-            self.rect.left = random.randint(0,1920)
+            self.rect.left = random.randint(0,resolution[0])
     
 
