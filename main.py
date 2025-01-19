@@ -1,7 +1,7 @@
 import pygame
 import random
 import sys
-from classes import Player, Enemy
+
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -19,7 +19,28 @@ pygame.display.set_caption("Title Screen") #Sets the title of the window to "Tit
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial",40,True) #Added the titlefont
 timer_font = pygame.font.Font(None, 36)  
-    
 
+if __name__ == "__main__":    
+    game_state = True
+    while game_state:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                game_state = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    game_state = False
+
+
+        screen.fill(WHITE)
+        title_text = font.render("Title Screen",True , BLACK)
+        screen.blit(title_text, (resolution[0] // 2, resolution[1] // 2))
+
+
+
+        pygame.display.flip()
+        clock.tick(250)
+
+    pygame.quit()
+    sys.exit()
 
 
