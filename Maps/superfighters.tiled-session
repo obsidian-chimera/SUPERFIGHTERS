@@ -1,0 +1,28 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+    },
+    "frame.defaultDuration": 10000,
+    "last.imagePath": "C:/Users/rraja/Downloads",
+    "map.height": 36,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 30,
+    "map.tileWidth": 30,
+    "map.width": 64,
+    "openFiles": [
+    ],
+    "project": "superfighters.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 30,
+        "width": 30
+    }
+}
