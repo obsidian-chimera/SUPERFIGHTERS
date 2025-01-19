@@ -1,7 +1,7 @@
 import pygame
 import random
 import sys
-from classes import Player, Enemy
+from block_game_classes import Player, Enemy
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
