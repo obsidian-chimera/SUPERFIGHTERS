@@ -1,4 +1,12 @@
 import pygame
+import random
+
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+
+
 class Button:
     def __init__(self, text, position, size, colour):
         self.text = text
@@ -16,6 +24,33 @@ class Button:
         screen.blit(self.text_surface,self.rect)
 
         # Method to draw the button onto the screen with the text superimposed on top of the button background
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(BLUE)
+        self.rect = self.image.get_rect()
+        self.rect.center = (1920 // 2, 1080 // 2)
 
+    def update(self, keys):
+        if keys[pygame.K_LEFT] and self.rect.left > 0:
+            self.rect.x -= 5
+        if keys[pygame.K_RIGHT] and self.rect.right < 1920:
+            self.rect.x += 5
+
+# Enemy sprite class
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.Surface((50, 50))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (random.randint(0,1920), y)
+
+    def update(self):
+        self.rect.y += 3
+        if self.rect.top > 1080:
+            self.rect.bottom = 0
+            self.rect.left = random.randint(0,1920)
     
 
