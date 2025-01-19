@@ -17,7 +17,7 @@ resolution = display_list[0]
 screen = pygame.display.set_mode(display_list[0],flags=pygame.FULLSCREEN,depth=0,display=0,vsync=0) #A bit more complex here in that it renders the display to my monitor's resolution, 
 pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial",40,True) #Added the titlefont
+font = pygame.font.SysFont("Arial",90,True) #Added the titlefont
 timer_font = pygame.font.Font(None, 36)  
 
 if __name__ == "__main__":    
@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
         screen.fill(WHITE)
         title_text = font.render("Title Screen",True , BLACK)
-        screen.blit(title_text, (resolution[0] // 2, resolution[1] // 2))
+        screen.blit(title_text, (resolution[0] // 2 - title_text.get_width() // 2, resolution[1] // 2 - title_text.get_height() // 2))
 
 
 
