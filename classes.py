@@ -22,8 +22,8 @@ class Button:
         # Constructor method to setup attributes for the button
 
     def draw(self, screen):
-        pygame.draw.rect(screen,self.colour,self.rect)
-        screen.blit(self.text_surface,self.rect)
+        pygame.draw.rect(screen, self.colour, self.rect)
+        self.surface.blit(self.text, (self.position[0] + self.size[0] // 2 - self.surface.get_width() // 2, self.position[1] + self.size[1] // 2 - self.surface.get_height() // 2))
 
         # Method to draw the button onto the screen with the text superimposed on top of the button background
 class Player(pygame.sprite.Sprite):
