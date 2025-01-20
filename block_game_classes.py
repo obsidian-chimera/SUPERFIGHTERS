@@ -36,9 +36,9 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
-            self.rect.x -= 5
+            self.rect.x -= 8
         if keys[pygame.K_RIGHT] and self.rect.right < resolution[0]:
-            self.rect.x += 5
+            self.rect.x += 8
 
 # Enemy sprite class
 class Enemy(pygame.sprite.Sprite):
@@ -49,8 +49,8 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (random.randint(0,resolution[0]), y)
 
-    def update(self):
-        self.rect.y += 3
+    def update(self, speed=3):
+        self.rect.y += speed
         if self.rect.top > resolution[1]:
             self.rect.bottom = 0
             self.rect.left = random.randint(0,resolution[0])

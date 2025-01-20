@@ -1,4 +1,6 @@
 import pygame
+pygame.init()
+
 import random
 import sys
 from block_game_classes import Player, Enemy
@@ -42,10 +44,12 @@ spawn_time = pygame.time.get_ticks()
 
 if __name__ == "__main__":
     running = True
+    score = 0
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+        
 
         keys = pygame.key.get_pressed()
         player_group.update(keys)
@@ -58,11 +62,14 @@ if __name__ == "__main__":
 
         game_time = (pygame.time.get_ticks() - start_time) // 1000
         level_time = pygame.time.get_ticks() - start_time
+        
 
         if (level_time - spawn_time) // 1000 > 5:
             enemy = Enemy(random.randint(0,resolution[0]), -50)
             enemies.add(enemy)
             spawn_time = pygame.time.get_ticks()
+            speed = 3 + 1*(level_time // 10000)
+            enemies.update(speed)
 
         timer_text = timer_font.render(f"Time: {game_time}s", True, BLACK)
 
@@ -71,13 +78,26 @@ if __name__ == "__main__":
         enemies.draw(screen)
         screen.blit(timer_text, (10, 10))
     
-
+        score = game_time * 15
         # Update display
         pygame.display.flip()
 
         # Cap the frame rate
         clock.tick(250)
-        
+
+    end_game = True
+    while end_game:
+        score_text = font.render(f"Score: {score}", True, BLACK)
+        screen.fill(WHITE)
+        screen.blit(score_text, ((resolution[0] - score_text.get_width()) // 2, (resolution[1]- score_text.get_height()) // 2))
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                end_game = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    end_game = False
+
 
     pygame.quit()
     sys.exit()
