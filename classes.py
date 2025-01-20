@@ -6,6 +6,8 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
+
+
 display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
 resolution = display_list[0]
 
