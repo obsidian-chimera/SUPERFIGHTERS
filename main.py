@@ -1,15 +1,16 @@
 import pygame
 import sys
+import pytmx #Imported the pytmx module
 pygame.init() #Simply initialises pygame and all its modules
 pygame.font.init() #Initialise the fonts I want to use
 from classes import Button
-#from screens import main_menu
+
 
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
-BLUE = (0, 0, 255)
+BLUE = (127, 255, 212)
 
 game_state = bool(False)
 
@@ -38,6 +39,14 @@ screen_exit_button = Button("EXIT", (((resolution[0] - 100) // 2) +100, 3 * ((re
 screen_buttons.append(screen_button)
 screen_buttons.append(screen_exit_button)
 
+choice_buttons = []
+one_player = Button("ONE PLAYER", ((resolution[0] - 100) // 2 -100, 3 * ((resolution[1] - 100) // 4)), (100, 100), BLACK, WHITE)
+two_player = Button("TWO PLAYER", (((resolution[0] - 100) // 2) +100, 3 * ((resolution[1] - 100) // 4)), (100, 100), BLACK, WHITE)
+choice_buttons.append(one_player)
+choice_buttons.append(two_player)
+
+
+
 screen_selector = "start"
 
 
@@ -61,8 +70,16 @@ if __name__ == "__main__":
 
         if screen_selector == "start":
             start_screen(BLACK, WHITE, resolution)
+
         elif screen_selector == "MAIN":
-            start_screen(WHITE, BLACK, resolution)
+                screen.fill(BLUE)
+                title_text = font.render("SUPERFIGHTERS",True , BLACK)
+                main_text_width = title_text.get_width()
+                main_text_height = title_text.get_height()
+
+                screen.blit(title_text, (resolution[0] // 2 - main_text_width // 2, resolution[1] // 2 - main_text_height // 2))
+                for button in choice_buttons:
+                    button.draw(screen)
         
 
 
