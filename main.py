@@ -3,7 +3,7 @@ import sys
 pygame.init() #Simply initialises pygame and all its modules
 pygame.font.init() #Initialise the fonts I want to use
 from classes import Button
-from screens import main_menu
+#from screens import main_menu
 
 
 WHITE = (255, 255, 255)
