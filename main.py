@@ -90,11 +90,9 @@ if __name__ == "__main__":
                             print("TWO PLAYER")
 
         if screen_selector == "start":
-            screen.fill(BLACK)
             start_screen(BLACK, WHITE, resolution)
 
         if screen_selector == "MAIN":
-            screen.fill(BLUE)
             choice_screen(BLUE, WHITE, resolution)
 
         
