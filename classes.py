@@ -34,3 +34,17 @@ class Button:
         screen.blit(self.surface, (x,y))
 
         # Method to draw the button onto the screen with the text superimposed on top of the button background
+class box:
+    def __init__(self, size, position, colour):
+        self.size = size
+        self.position = position
+        self.colour = colour
+        self.rect = pygame.Rect(self.position, self.size)
+        self.surface = pygame.Surface(self.size)
+        self.surface.fill(self.colour)
+        text_width, text_height = self.surface.get_size()
+        self.width = text_width
+        self.height = text_height
+
+    def draw(self, screen):
+        screen.blit(self.surface, self.rect)
