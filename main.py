@@ -72,7 +72,7 @@ def choice_screen(screen_colour, title_colour, resolution):
 # onep_buttons.append(setup)
 
 onep_boxes = []
-onep_box = box((resolution[0] // 3, resolution[1] // 3), ((resolution[0] - box.width) // 7, ((resolution[1] - height) // 2)), WHITE)
+onep_box = box((resolution[0] // 3, resolution[1] // 3), ((resolution[0] - 100) // 7, ((resolution[1] - 100) // 2)), WHITE)
 onep_boxes.append(onep_box)
 
 def oneplayer_screen(screen_colour, title_colour, resolution):
