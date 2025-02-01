@@ -20,8 +20,8 @@ class Button:
         self.font = pygame.font.SysFont("Arial",40,True)
         self.surface = self.font.render(self.text,True,text_colour)
         text_width, text_height = self.surface.get_size()
-        self.width = max(self.size[0], text_width + 20)
-        self.height = max(self.size[1], text_height + 20)
+        self.width = text_width + 20
+        self.height = text_height + 20
         self.rect = pygame.Rect(self.position, (self.width, self.height))
 
         # Constructor method to setup attributes for the button
