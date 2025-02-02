@@ -3,11 +3,23 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "base_map.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "base_map.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 991.3333333333333,
+                "y": 515.3333333333333
+            }
+        },
+        "storage_map.tsx": {
+            "scaleInDock": 1
+        }
     },
     "frame.defaultDuration": 10000,
     "last.imagePath": "C:/Users/rraja/Downloads",
@@ -17,9 +29,11 @@
     "map.tileWidth": 30,
     "map.width": 64,
     "openFiles": [
+        "base_map.tmx"
     ],
     "project": "superfighters.tiled-project",
     "recentFiles": [
+        "base_map.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

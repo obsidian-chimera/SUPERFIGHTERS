@@ -72,8 +72,14 @@ def choice_screen(screen_colour, title_colour, resolution):
 # onep_buttons.append(setup)
 
 onep_boxes = []
-onep_box = box((resolution[0] // 3, resolution[1] // 3), ((resolution[0] - 100) // 7, ((resolution[1] - 100) // 2)), WHITE)
+box_width = resolution[0] // 3
+box_height = resolution[1] // 3
+onep_box = box((box_width,box_height), ((resolution[0] - box_width) // 2, ((resolution[1] - box_height) // 2)), WHITE)
 onep_boxes.append(onep_box)
+
+onep_buttons = []
+start_game = Button("START GAME", ((resolution[0]-100) // 2, 3*((resolution[1]-100) // 4)), (100, 100), WHITE)
+onep_buttons.append(start_game)
 
 def oneplayer_screen(screen_colour, title_colour, resolution):
     screen.fill(screen_colour)
@@ -83,9 +89,8 @@ def oneplayer_screen(screen_colour, title_colour, resolution):
     screen.blit(title_text, ((resolution[0]) // 2 - main_text_width // 2, (resolution[1]-800) // 2 - main_text_height // 2))
     for box in onep_boxes:
         box.draw(screen)
-
-    # for button in onep_buttons:
-    #     button.draw(screen)
+    for button in onep_buttons:
+        button.draw(screen)
 
 
 screen_selector = "start"
@@ -102,23 +107,36 @@ if __name__ == "__main__":
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_loc = pygame.mouse.get_pos()
 
+            if screen_selector == "start":
+                for start_button in screen_buttons:
+                    if event.type == pygame.MOUSEBUTTONDOWN: #If the mouse is clicked
+                        if start_button.rect.collidepoint(mouse_loc): #If the mouse is clicked within the button boundaries 
+                            if start_button.text == "START": #Self explanatory 
+                                screen_selector = "MAIN"
+                            elif start_button.text == "EXIT":
+                                game_state = False
 
-            for start_button in screen_buttons:
-                if event.type == pygame.MOUSEBUTTONDOWN: #If the mouse is clicked
-                    if start_button.rect.collidepoint(mouse_loc): #If the mouse is clicked within the button boundaries 
-                        if start_button.text == "START": #Self explanatory 
-                            screen_selector = "MAIN"
-                        elif start_button.text == "EXIT":
-                            game_state = False
-            for choice_button in choice_buttons:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if choice_button.rect.collidepoint(mouse_loc):
-                        if choice_button.text == "ONE PLAYER":
-                            screen_selector = "ONE PLAYER"
-                            print("ONE PLAYER")
-                        elif choice_button.text == "TWO PLAYER":
-                            screen_selector = "TWO PLAYER"
-                            print("TWO PLAYER")
+            if screen_selector == "MAIN":
+                for choice_button in choice_buttons:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if choice_button.rect.collidepoint(mouse_loc):
+                            if choice_button.text == "ONE PLAYER":
+                                screen_selector = "ONE PLAYER"
+                                print("ONE PLAYER")
+                            elif choice_button.text == "TWO PLAYER":
+                                screen_selector = "TWO PLAYER"
+                                print("TWO PLAYER")
+
+            if screen_selector == "ONE PLAYER":
+                for choice_button in choice_buttons:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        if choice_button.rect.collidepoint(mouse_loc):
+                            if start_button.text == "ONE PLAYER":
+                                screen_selector = "ONE PLAYER"
+                                print("ONE PLAYER")
+                            elif choice_button.text == "TWO PLAYER":
+                                screen_selector = "TWO PLAYER"
+                                print("TWO PLAYER")
 
         if screen_selector == "start":
             start_screen(BLACK, WHITE, resolution)
