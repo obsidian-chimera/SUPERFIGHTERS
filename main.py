@@ -14,10 +14,13 @@ BLUE = (127, 255, 212)
 
 game_state = bool(False)
 
+pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
+icon = pygame.image.load(".\Images\icon.png") #Loads the image "icon.png" into the variable "icon"
+icon = pygame.transform.scale(icon, (500, 500))
+pygame.display.set_icon(icon) #Sets the icon of the window to the image "icon.png"
 display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
 resolution = display_list[0]
 screen = pygame.display.set_mode(display_list[0],flags=pygame.FULLSCREEN,depth=0,display=0,vsync=0) #A bit more complex here in that it renders the display to my monitor's resolution, 
-pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial",260,True) #Added the titlefont
 small_title = pygame.font.SysFont("Arial", 100, True)
@@ -73,13 +76,14 @@ def choice_screen(screen_colour, title_colour, resolution):
 # onep_buttons.append(setup)
 
 onep_boxes = []
-box_width = resolution[0] // 3
-box_height = resolution[1] // 3
+box_width = 500
+box_height = 500
 onep_box = box((box_width,box_height), ((resolution[0] - box_width) // 2, ((resolution[1] - box_height) // 2)), WHITE)
+onep_box.surface.blit(icon)
 onep_boxes.append(onep_box)
 
 onep_buttons = []
-start_game = Button("START GAME",((resolution[0] - 100) // 2 -100, 3 * ((resolution[1] - 100) // 4)), (100, 100), WHITE)
+start_game = Button("BEGIN",((resolution[0] // 2) -120, 3 * ((resolution[1] // 4))), (100, 100), WHITE)
 onep_buttons.append(start_game)
 
 def oneplayer_screen(screen_colour, title_colour, resolution):
@@ -97,7 +101,8 @@ def oneplayer_screen(screen_colour, title_colour, resolution):
 
 def gameplay_screen(screen_colour, title_colour, resolution):
     pygame.display.set_caption("Gameplay")
-    
+
+
 
 
 
@@ -142,10 +147,10 @@ if __name__ == "__main__":
                                 print("TWO PLAYER")
 
             if screen_selector == "ONE PLAYER":
-                for choice_button in choice_buttons:
+                for onep_button in onep_buttons:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if choice_button.rect.collidepoint(mouse_loc):
-                            if onep_buttons.text == "START GAME":
+                            if onep_button.text == "START GAME":
                                 screen_selector = "GAMEPLAY"
                                 print("GAMEPLAY")
                 
@@ -154,10 +159,10 @@ if __name__ == "__main__":
             start_screen(BLACK, WHITE, resolution)
 
         if screen_selector == "MAIN":
-            choice_screen(BLUE, WHITE, resolution)
+            choice_screen(BLACK, WHITE, resolution)
         
         if screen_selector == "ONE PLAYER":
-            oneplayer_screen(BLUE, WHITE, resolution)
+            oneplayer_screen(BLACK, WHITE, resolution)
 
         if screen_selector == "GAMEPLAY":
             pass
