@@ -52,6 +52,7 @@ choice_buttons.append(tutorial)
 choice_buttons.append(setup)
 
 def choice_screen(screen_colour, title_colour, resolution):
+    pygame.display.set_caption("Game Modes")
     screen.fill(screen_colour)
     title_text = font.render("SUPERFIGHTERS",True , title_colour)
     main_text_width = title_text.get_width()
@@ -78,19 +79,32 @@ onep_box = box((box_width,box_height), ((resolution[0] - box_width) // 2, ((reso
 onep_boxes.append(onep_box)
 
 onep_buttons = []
-start_game = Button("START GAME", ((resolution[0]-100) // 2, 3*((resolution[1]-100) // 4)), (100, 100), WHITE)
+start_game = Button("START GAME",((resolution[0] - 100) // 2 -100, 3 * ((resolution[1] - 100) // 4)), (100, 100), WHITE)
 onep_buttons.append(start_game)
 
 def oneplayer_screen(screen_colour, title_colour, resolution):
+    pygame.display.set_caption("One PLayer Mode")
     screen.fill(screen_colour)
     title_text = small_title.render("SUPERFIGHTERS",True , title_colour)
     main_text_width = title_text.get_width()
     main_text_height = title_text.get_height()
-    screen.blit(title_text, ((resolution[0]) // 2 - main_text_width // 2, (resolution[1]-800) // 2 - main_text_height // 2))
+    screen.blit(title_text, ((resolution[0]- main_text_width) // 2, (resolution[1]-800 - main_text_height) // 2))
     for box in onep_boxes:
         box.draw(screen)
     for button in onep_buttons:
         button.draw(screen)
+
+
+def gameplay_screen(screen_colour, title_colour, resolution):
+    pygame.display.set_caption("Gameplay")
+    
+
+
+
+
+
+
+
 
 
 screen_selector = "start"
@@ -131,12 +145,10 @@ if __name__ == "__main__":
                 for choice_button in choice_buttons:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if choice_button.rect.collidepoint(mouse_loc):
-                            if start_button.text == "ONE PLAYER":
-                                screen_selector = "ONE PLAYER"
-                                print("ONE PLAYER")
-                            elif choice_button.text == "TWO PLAYER":
-                                screen_selector = "TWO PLAYER"
-                                print("TWO PLAYER")
+                            if onep_buttons.text == "START GAME":
+                                screen_selector = "GAMEPLAY"
+                                print("GAMEPLAY")
+                
 
         if screen_selector == "start":
             start_screen(BLACK, WHITE, resolution)
@@ -147,10 +159,13 @@ if __name__ == "__main__":
         if screen_selector == "ONE PLAYER":
             oneplayer_screen(BLUE, WHITE, resolution)
 
+        if screen_selector == "GAMEPLAY":
+            pass
+
         
 
 
-        pygame.display.flip()
+        pygame.display.update()
         clock.tick(60)
 
     pygame.quit()
