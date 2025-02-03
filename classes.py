@@ -48,3 +48,4 @@ class box:
 
     def draw(self, screen):
         screen.blit(self.surface, self.rect)
+

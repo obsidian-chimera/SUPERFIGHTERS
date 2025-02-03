@@ -14,6 +14,21 @@ BLUE = (127, 255, 212)
 
 game_state = bool(False)
 
+def load_tmx_map(filename):
+    return pytmx.load_pygame(filename)
+
+map_one = load_tmx_map("./Maps/base_map.tmx")
+
+def render_map(surface, tmx_data):
+    for layer in tmx_data.visible_layers:
+        if isinstance(layer, pytmx.TiledTileLayer):
+            for x, y, gid in layer:
+                tile = tmx_data.get_tile_image_by_gid(gid)
+                if tile:
+                    surface.blit(tile, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
+
+
+
 pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
 icon = pygame.image.load(".\Images\icon.png") #Loads the image "icon.png" into the variable "icon"
 icon = pygame.transform.scale(icon, (500, 500))
@@ -99,8 +114,10 @@ def oneplayer_screen(screen_colour, title_colour, resolution):
         button.draw(screen)
 
 
-def gameplay_screen(screen_colour, title_colour, resolution):
+def gameplay_screen():
     pygame.display.set_caption("Gameplay")
+    render_map(screen, map_one)
+
 
 
 
@@ -165,7 +182,7 @@ if __name__ == "__main__":
             oneplayer_screen(BLACK, WHITE, resolution)
 
         if screen_selector == "GAMEPLAY":
-            pass
+            gameplay_screen()
 
         
 
