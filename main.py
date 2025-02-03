@@ -14,6 +14,19 @@ BLUE = (127, 255, 212)
 
 game_state = bool(False)
 
+pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
+icon = pygame.image.load("./images/icon.png") #Loads the image "icon.png" into the variable "icon"
+icon = pygame.transform.scale(icon, (500, 500))
+pygame.display.set_icon(icon) #Sets the icon of the window to the image "icon.png"
+display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
+resolution = display_list[0]
+screen = pygame.display.set_mode(display_list[0],flags=pygame.FULLSCREEN,depth=0,display=0,vsync=0) #A bit more complex here in that it renders the display to my monitor's resolution, 
+clock = pygame.time.Clock()
+font = pygame.font.SysFont("Arial",260,True) #Added the titlefont
+small_title = pygame.font.SysFont("Arial", 100, True)
+timer_font = pygame.font.Font(None, 36)
+
+
 def load_tmx_map(filename):
     return pytmx.load_pygame(filename)
 
@@ -26,20 +39,6 @@ def render_map(surface, tmx_data):
                 tile = tmx_data.get_tile_image_by_gid(gid)
                 if tile:
                     surface.blit(tile, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
-
-
-
-pygame.display.set_caption("Title Screen") #Sets the title of the window to "Title Screen"
-icon = pygame.image.load(".\Images\icon.png") #Loads the image "icon.png" into the variable "icon"
-icon = pygame.transform.scale(icon, (500, 500))
-pygame.display.set_icon(icon) #Sets the icon of the window to the image "icon.png"
-display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
-resolution = display_list[0]
-screen = pygame.display.set_mode(display_list[0],flags=pygame.FULLSCREEN,depth=0,display=0,vsync=0) #A bit more complex here in that it renders the display to my monitor's resolution, 
-clock = pygame.time.Clock()
-font = pygame.font.SysFont("Arial",260,True) #Added the titlefont
-small_title = pygame.font.SysFont("Arial", 100, True)
-timer_font = pygame.font.Font(None, 36)
 
 
 screen_buttons = []
@@ -166,8 +165,8 @@ if __name__ == "__main__":
             if screen_selector == "ONE PLAYER":
                 for onep_button in onep_buttons:
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        if choice_button.rect.collidepoint(mouse_loc):
-                            if onep_button.text == "START GAME":
+                        if onep_button.rect.collidepoint(mouse_loc):
+                            if onep_button.text == "BEGIN":
                                 screen_selector = "GAMEPLAY"
                                 print("GAMEPLAY")
                 

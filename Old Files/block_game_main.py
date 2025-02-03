@@ -83,7 +83,7 @@ if __name__ == "__main__":
         pygame.display.flip()
 
         # Cap the frame rate
-        clock.tick(250)
+        clock.tick(150)
 
     end_game = True
     while end_game:
