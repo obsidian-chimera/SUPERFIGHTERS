@@ -4,17 +4,26 @@
         "width": 2
     },
     "activeFile": "base_map.tmx",
+    "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/rraja/Documents/GitHub/5games/Platformer-20250208T123503Z-001/Platformer/Platform 4 finish/data/maps/world.tmx": {
+            "scale": 0.3780208333333333,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 320.08817856158726,
+                "y": 256.59961421879314
+            }
+        },
         "base_map.tmx": {
-            "scale": 0.75,
+            "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 991.3333333333333,
-                "y": 515.3333333333333
+                "x": 346.969696969697,
+                "y": 792.4242424242425
             }
         },
         "storage_map.tsx": {
@@ -32,6 +41,7 @@
         "base_map.tmx"
     ],
     "project": "superfighters.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "base_map.tmx"
     ],
