@@ -123,13 +123,14 @@ class Game:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (50, 50))
-                Player((obj.x, obj.y), player_img, (self.sprites, self.collision))
+                Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
 
 
-        self.sprites.draw(self.screen)
+
 
     def run(self):
         screen_selector = "start"
+        dt = self.clock.tick(60) / 1000 
         game_state = True
         while game_state:
             for event in pygame.event.get():
@@ -180,6 +181,8 @@ class Game:
 
             if screen_selector == "GAMEPLAY":
                 self.gameplay_screen()
+                self.sprites.update(dt)
+                self.sprites.draw(self.screen)
 
             pygame.display.update()
             self.clock.tick(60)
