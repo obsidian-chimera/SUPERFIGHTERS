@@ -104,7 +104,6 @@ class Game:
             button.draw(self.screen)
 
     def gameplay_screen_setup(self):
-
         self.buttons = []
         self.boxes = []
         pygame.display.set_caption("Gameplay")
@@ -113,26 +112,58 @@ class Game:
         self.level_width = self.map.width * 64
         self.level_height = self.map.height * 64
 
-        for x, y, image in self.map.get_layer_by_name('Main').tiles():
-            object((x * 64,y * 64), image, (self.sprites, self.collision))
+        # for layer in self.map.visible_layers:
+        #     if isinstance(layer, pytmx.TiledTileLayer):
+        #         for x, y, gid in layer:
+        #             tile = self.map.get_tile_image_by_gid(gid)
+        #             if tile:
+        #                 self.surface.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
+
+        for layer in self.map.visible_layers:
+            if isinstance(layer, pytmx.TiledTileLayer):
+                for x, y, gid in layer:
+                    tile = self.map.get_tile_image_by_gid(gid)
+                    if tile:
+                        sprite = object((x * self.map.tilewidth, y * self.map.tileheight), tile, (self.sprites))
+                        if layer.name == "Main":
+                            self.sprites.add(sprite)
+                            self.collision.add(sprite)
+                        if layer.name == "Decoration":
+                            self.sprites.add(sprite)
+                        if layer.name == "Entities":
+                            self.sprites.add(sprite)
+                            self.collision.add(sprite)
+                            player_img = pygame.image.load("./images/player.webp").convert_alpha()
+                            player_img = pygame.transform.scale(player_img, (50, 50))
+                            self.player = Player((x, y), player_img, (self.sprites, self.collision), self.collision)
+                            
+
+        # for obj in self.map.objects:
+        #     if obj.name == "Player":
+        #         player_img = pygame.image.load("./images/player.webp").convert_alpha()
+        #         player_img = pygame.transform.scale(player_img, (50, 50))
+        #         self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision_sprites)
+        #         self.sprites.add(self.player)
+
+        # for x, y, image in self.map.get_layer_by_name('Main').tiles():
+        #     object((x * 64,y * 64), image, (self.sprites, self.collision))
         
-        for x, y, image in self.map.get_layer_by_name('Decoration').tiles():
-            object((x * 64,y * 64), image, (self.sprites))
+        # for x, y, image in self.map.get_layer_by_name('Decoration').tiles():
+        #     object((x * 64,y * 64), image, (self.sprites))
 
         
-        for obj in self.map.get_layer_by_name('Entities'):
-            if obj.name == 'Player':
-                player_img = pygame.image.load("./images/player.webp").convert_alpha()
-                player_img = pygame.transform.scale(player_img, (50, 50))
-                Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
+        # for obj in self.map.get_layer_by_name('Entities'):
+        #     if obj.name == 'Player':
+        #         player_img = pygame.image.load("./images/player.webp").convert_alpha()
+        #         player_img = pygame.transform.scale(player_img, (50, 50))
+        #         Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
         
     def gameplay_screen(self):
         dt = self.clock.tick(100) / 1000
         self.screen.fill(BACKGROUND)
         self.sprites.update(dt)
         self.sprites.draw(self.screen)
-
-
+        pygame.display.flip()
 
 
     def run(self):

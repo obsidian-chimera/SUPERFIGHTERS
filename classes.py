@@ -64,7 +64,7 @@ class object(pygame.sprite.Sprite):
 
 class Player(object):
     def __init__(self, position, image, classification, collision):
-        super().__init__(position, image, classification)
+        object.__init__(position, image, classification)
         self.health = 100
         self.speed = 400
         self.jump = 10
