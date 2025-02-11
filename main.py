@@ -127,7 +127,7 @@ class Game:
                 Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
         
     def gameplay_screen(self):
-        dt = self.clock.tick(60) / 1000
+        dt = self.clock.tick(100) / 1000
         self.screen.fill(BACKGROUND)
         self.sprites.update(dt)
         self.sprites.draw(self.screen)

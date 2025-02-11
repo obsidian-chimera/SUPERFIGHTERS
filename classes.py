@@ -68,7 +68,7 @@ class Player(object):
         self.health = 100
         self.speed = 400
         self.jump = 10
-        self.gravity = 50
+        self.gravity = 400
         self.bullets = []
         self.weapon = None
         self.shooting = False
