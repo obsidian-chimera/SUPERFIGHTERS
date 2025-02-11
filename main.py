@@ -9,6 +9,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 BLUE = (127, 255, 212)
+BACKGROUND = '#fcdfcd'
 
 icon = pygame.image.load("./images/icon.png")  # Loads the image "icon.png" into the variable "icon"
 icon = pygame.transform.scale(icon, (500, 500))
@@ -102,8 +103,8 @@ class Game:
         for button in self.buttons:
             button.draw(self.screen)
 
-    def gameplay_screen(self):
-        dt = self.clock.tick(60) / 1000 
+    def gameplay_screen_setup(self):
+
         self.buttons = []
         self.boxes = []
         pygame.display.set_caption("Gameplay")
@@ -124,13 +125,18 @@ class Game:
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (50, 50))
                 Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
+        
+    def gameplay_screen(self):
+        dt = self.clock.tick(60) / 1000
+        self.screen.fill(BACKGROUND)
+        self.sprites.update(dt)
+        self.sprites.draw(self.screen)
 
 
 
 
     def run(self):
         screen_selector = "start"
-        dt = self.clock.tick(60) / 1000 
         game_state = True
         while game_state:
             for event in pygame.event.get():
@@ -180,9 +186,12 @@ class Game:
                 self.oneplayer_screen(BLACK, WHITE, resolution)
 
             if screen_selector == "GAMEPLAY":
+                self.gameplay_screen_setup()
+                screen_selector = "GAMEPLAY LOOP"
+
+            if screen_selector == "GAMEPLAY LOOP":
                 self.gameplay_screen()
-                self.sprites.update(dt)
-                self.sprites.draw(self.screen)
+
 
             pygame.display.update()
             self.clock.tick(60)

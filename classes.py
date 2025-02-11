@@ -91,17 +91,7 @@ class Player(object):
             self.direction.x = 1
         if keys[pygame.K_SPACE] and self.ground:
             self.direction.y = -20
-
-    def move(self, dt):
-        # horizontal
-        self.rect.x += self.direction.x * self.speed * -dt
-        self.collisions('horizontal')
-        
-        # vertical 
-        self.direction.y += self.gravity * -dt
-        self.rect.y += self.direction.y
-        self.collisions('vertical')
-
+    
     def collisions(self, direction):
         for sprite in self.collision:
             if sprite.rect.colliderect(self.rect):
@@ -112,6 +102,20 @@ class Player(object):
                     if self.direction.y > 0: self.rect.bottom = sprite.rect.top
                     if self.direction.y < 0: self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
+
+    def move(self, dt):
+        # Horizontal movement
+        prev_x = self.rect.x
+        self.rect.x += self.direction.x * self.speed * dt
+        self.collisions('horizontal')
+
+        # Vertical movement
+        prev_y = self.rect.y
+        self.direction.y += self.gravity * dt
+        self.rect.y += self.direction.y
+        self.collisions('vertical')
+
+
 
     def check_floor(self):
         bottom_rect = pygame.FRect((0,0), (self.rect.width, 2)).move_to(midtop = self.rect.midbottom)
@@ -138,6 +142,7 @@ class Player(object):
         self.check_floor()
         self.input()
         self.move(dt)
+
 
 class bot:
     pass
