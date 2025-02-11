@@ -89,8 +89,8 @@ class Player(object):
             self.direction.x = -1
         if keys[pygame.K_d]:    
             self.direction.x = 1
-        if keys[pygame.K_SPACE] and self.ground:
-            self.direction.y = -20
+        # if keys[pygame.K_SPACE] and self.ground:
+        #     self.direction.y = -20
     
     def collisions(self, direction):
         for sprite in self.collision:
