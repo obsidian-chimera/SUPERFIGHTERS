@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
         timer_text = timer_font.render(f"Time: {game_time}s", True, BLACK)
 
-        screen.fill(WHITE)
+        screen.fill(BLACK)
         player_group.draw(screen)
         enemies.draw(screen)
         screen.blit(timer_text, (10, 10))
@@ -83,7 +83,7 @@ if __name__ == "__main__":
         pygame.display.flip()
 
         # Cap the frame rate
-        clock.tick(500)
+        clock.tick(100)
 
     end_game = True
     while end_game:

@@ -77,7 +77,7 @@ class Player(object):
         self.kills = 0
         self.deaths = 0
         self.damage = 10
-        self.direction = pygame.Vector2(0, 0)
+        self.direction = pygame.Vector2(0, 1)
         self.collision = collision
         self.ground = False
         self.player_rect = pygame.Rect(position, image.get_size())
@@ -103,9 +103,14 @@ class Player(object):
             self.direction.x = -1
         if keys[pygame.K_d]:    
             self.direction.x = 1
-        self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
-        if keys[pygame.K_SPACE] and self.ground:
-             self.direction.y = -20
+        self.direction.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])
+        if keys[pygame.K_SPACE]:
+            delay = 2000 
+            time_elapsed = pygame.time.get_ticks()
+            while time_elapsed > 2000:
+               self.direction.y = -1
+            self.direction.y = 1
+            time_elapsed = 0     
 
 
     def move(self, dt):
@@ -116,7 +121,8 @@ class Player(object):
 
         # Vertical movement
         prev_y = self.rect.y
-        self.rect.y += (self.direction.y * self.gravity * dt)
+        self.rect.y += self.gravity*dt
+        #self.rect.y += (self.direction.y * self.gravity * dt)
 
         # self.collisions('vertical')    
     def collisions(self, direction):
@@ -153,7 +159,6 @@ class Player(object):
     #         self.jump()
     
     def update(self, dt):
-        self.check_floor()
         self.input()
         self.move(dt)
 
