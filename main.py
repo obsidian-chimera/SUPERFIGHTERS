@@ -145,24 +145,25 @@ class Game:
         #                     self.player = Player((x, y), player_img, (self.sprites, self.collision), self.collision)
                             
 
-        for obj in self.map.objects:
-            if obj.name == "Player":
-                player_img = pygame.image.load("./images/player.webp").convert_alpha()
-                player_img = pygame.transform.scale(player_img, (50, 50))
-                self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision)
-                self.sprites.add(self.player)
+        # for obj in self.map.objects:
+        #     if obj.name == "Player":
+        #         player_img = pygame.image.load("./images/player.webp").convert_alpha()
+        #         player_img = pygame.transform.scale(player_img, (50, 50))
+        #         self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision)
+        #         self.sprites.add(self.player)
 
         for obj in self.map.objects:
             if obj.name == 'Instant Death':
                 rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                self.instadeath.add(obj)
+                self.instadeath.append(rect)
 
         # for x,y, image in self.map.get_layer_by_name('Main').tiles():
         #     object((x * 64,y * 64), image, (self.sprites))
 
-        # for obj in self.map.objects:
-        #     if obj.name == 'Collisions':
-        #         object((x * 64,y * 64), image, (self.collision))
+        for obj in self.map.objects:
+            if obj.name == 'Collisions':
+                rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                self.collision.append(rect)
         
         # for x, y, image in self.map.get_layer_by_name('Decoration').tiles():
         #     object((x * 64,y * 64), image, (self.sprites))

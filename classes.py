@@ -77,31 +77,48 @@ class Player(object):
         self.kills = 0
         self.deaths = 0
         self.damage = 10
-        self.direction = pygame.Vector2(0, 1)
+        self.direction = pygame.Vector2(0, 0)
         self.collision = collision
         self.ground = False
+        self.player_rect = pygame.Rect(position, image.get_size())
+        self.movement = pygame.Vector2(0, 0)
+        self.position = pygame.Vector2(position)
+        self.collided = False
 
     def input(self):
         keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            self.movement.x -= self.speed
+        if keys[pygame.K_RIGHT]:
+            self.movement.x += self.speed
+        if keys[pygame.K_UP]:
+            self.movement.y -= self.speed
+        if keys[pygame.K_DOWN]:
+            self.movement.y += self.speed
+        self.position += self.movement
+        self.player_rect.topleft = self.position
+
+        
         # if keys[pygame.K_a]:
         #     self.direction.x = -1
         # if keys[pygame.K_d]:    
         #     self.direction.x = 1
-        self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
-        if keys[pygame.K_SPACE] and self.ground:
-             self.direction.y = -20
+        #self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
+        # if keys[pygame.K_SPACE] and self.ground:
+        #      self.direction.y = -20
 
-    def move(self, dt):
-        # Horizontal movement
-        prev_x = self.rect.x
-        self.rect.x += (self.direction.x * self.speed * dt)
-        self.collisions('horizontal')
 
-        # Vertical movement
-        prev_y = self.rect.y
-        self.rect.y += (self.direction.y * self.gravity * dt)
+    # def move(self, dt):
+    #     # Horizontal movement
+    #     prev_x = self.rect.x
+    #     self.rect.x += (self.direction.x * self.speed * dt)
+    #     self.collisions('horizontal')
 
-        self.collisions('vertical')    
+    #     # Vertical movement
+    #     prev_y = self.rect.y
+    #     self.rect.y += (self.direction.y * self.gravity * dt)
+
+        # self.collisions('vertical')    
     def collisions(self, direction):
         for sprite in self.collision:
             if sprite.rect.colliderect(self.rect):
@@ -117,6 +134,7 @@ class Player(object):
                     if self.direction.y < 0: 
                         self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
+
 
 
 
