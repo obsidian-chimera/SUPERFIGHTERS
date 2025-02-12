@@ -31,18 +31,25 @@ class Game:
         self.buttons = []
         self.boxes = []
         self.sprites = pygame.sprite.Group()
-        self.collision = pygame.sprite.Group()
+        self.collision = []
+        self.instadeath = []
 
     def load_tmx_map(self, filename):
         return pytmx.load_pygame(filename)
 
-    def render_map(self, surface, tmx_data):
+    def render_map(self, surface, tmx_data, resolution):
+        map_width = tmx_data.width * tmx_data.tilewidth
+        map_height = tmx_data.height * tmx_data.tileheight
+        screen_width, screen_height = resolution
+        scale_factor = min(screen_width / map_width, screen_height / map_height)
+
         for layer in tmx_data.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid in layer:
                     tile = tmx_data.get_tile_image_by_gid(gid)
                     if tile:
-                        surface.blit(tile, (x * tmx_data.tilewidth, y * tmx_data.tileheight))
+                        scaled_tile = pygame.transform.scale(tile, (int(tmx_data.tilewidth * scale_factor), int(tmx_data.tileheight * scale_factor)))
+                        surface.blit(scaled_tile, (x * tmx_data.tilewidth * scale_factor, y * tmx_data.tileheight*scale_factor))
 
     def start_screen(self, screen_colour, title_colour, resolution):
         self.buttons = []
@@ -119,51 +126,59 @@ class Game:
         #             if tile:
         #                 self.surface.blit(tile, (x * self.map.tilewidth, y * self.map.tileheight))
 
-        for layer in self.map.visible_layers:
-            if isinstance(layer, pytmx.TiledTileLayer):
-                for x, y, gid in layer:
-                    tile = self.map.get_tile_image_by_gid(gid)
-                    if tile:
-                        sprite = object((x * self.map.tilewidth, y * self.map.tileheight), tile, (self.sprites))
-                        if layer.name == "Main":
-                            self.sprites.add(sprite)
-                            self.collision.add(sprite)
-                        if layer.name == "Decoration":
-                            self.sprites.add(sprite)
-                        if layer.name == "Entities":
-                            self.sprites.add(sprite)
-                            self.collision.add(sprite)
-                            player_img = pygame.image.load("./images/player.webp").convert_alpha()
-                            player_img = pygame.transform.scale(player_img, (50, 50))
-                            self.player = Player((x, y), player_img, (self.sprites, self.collision), self.collision)
+        # for layer in self.map.visible_layers:
+        #     if isinstance(layer, pytmx.TiledTileLayer):
+        #         for x, y, gid in layer:
+        #             tile = self.map.get_tile_image_by_gid(gid)
+        #             if tile:
+        #                 sprite = object((x * self.map.tilewidth, y * self.map.tileheight), tile, (self.sprites))
+        #                 if layer.name == "Main":
+        #                     self.sprites.add(sprite)
+        #                     self.collision.add(sprite)
+        #                 if layer.name == "Decoration":
+        #                     self.sprites.add(sprite)
+        #                 if layer.name == "Entities":
+        #                     self.sprites.add(sprite)
+        #                     self.collision.add(sprite)
+        #                     player_img = pygame.image.load("./images/player.webp").convert_alpha()
+        #                     player_img = pygame.transform.scale(player_img, (50, 50))
+        #                     self.player = Player((x, y), player_img, (self.sprites, self.collision), self.collision)
                             
 
-        # for obj in self.map.objects:
-        #     if obj.name == "Player":
-        #         player_img = pygame.image.load("./images/player.webp").convert_alpha()
-        #         player_img = pygame.transform.scale(player_img, (50, 50))
-        #         self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision_sprites)
-        #         self.sprites.add(self.player)
+        for obj in self.map.objects:
+            if obj.name == "Player":
+                player_img = pygame.image.load("./images/player.webp").convert_alpha()
+                player_img = pygame.transform.scale(player_img, (50, 50))
+                self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision)
+                self.sprites.add(self.player)
 
-        # for x, y, image in self.map.get_layer_by_name('Main').tiles():
-        #     object((x * 64,y * 64), image, (self.sprites, self.collision))
+        for obj in self.map.objects:
+            if obj.name == 'Instant Death':
+                rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                self.instadeath.add(obj)
+
+        # for x,y, image in self.map.get_layer_by_name('Main').tiles():
+        #     object((x * 64,y * 64), image, (self.sprites))
+
+        # for obj in self.map.objects:
+        #     if obj.name == 'Collisions':
+        #         object((x * 64,y * 64), image, (self.collision))
         
         # for x, y, image in self.map.get_layer_by_name('Decoration').tiles():
         #     object((x * 64,y * 64), image, (self.sprites))
 
+        for obj in self.map.objects:
+            if obj.name == 'Player':
+                player_img = pygame.image.load("./images/player.webp").convert_alpha()
+                player_img = pygame.transform.scale(player_img, (50, 50))
+                Player((obj.x, obj.y), player_img, (self.sprites), self.collision)
         
-        # for obj in self.map.get_layer_by_name('Entities'):
-        #     if obj.name == 'Player':
-        #         player_img = pygame.image.load("./images/player.webp").convert_alpha()
-        #         player_img = pygame.transform.scale(player_img, (50, 50))
-        #         Player((obj.x, obj.y), player_img, (self.sprites, self.collision), self.collision)
-        
-    def gameplay_screen(self):
-        dt = self.clock.tick(100) / 1000
+    def gameplay_screen(self,dt):
         self.screen.fill(BACKGROUND)
+        self.render_map(self.screen, self.map, resolution)
         self.sprites.update(dt)
         self.sprites.draw(self.screen)
-        pygame.display.flip()
+
 
 
     def run(self):
@@ -221,11 +236,11 @@ class Game:
                 screen_selector = "GAMEPLAY LOOP"
 
             if screen_selector == "GAMEPLAY LOOP":
-                self.gameplay_screen()
+                self.gameplay_screen(self.clock.tick(100) / 1000)
 
 
             pygame.display.update()
-            self.clock.tick(60)
+            self.clock.tick(100)
 
         pygame.quit()
         sys.exit()

@@ -64,7 +64,7 @@ class object(pygame.sprite.Sprite):
 
 class Player(object):
     def __init__(self, position, image, classification, collision):
-        object.__init__(position, image, classification)
+        super().__init__(position, image, classification)
         self.health = 100
         self.speed = 400
         self.jump = 10
@@ -83,13 +83,25 @@ class Player(object):
 
     def input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            self.direction.x = -1
-        if keys[pygame.K_d]:    
-            self.direction.x = 1
+        # if keys[pygame.K_a]:
+        #     self.direction.x = -1
+        # if keys[pygame.K_d]:    
+        #     self.direction.x = 1
+        self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
         if keys[pygame.K_SPACE] and self.ground:
-             self.direction.y = -1
-    
+             self.direction.y = -20
+
+    def move(self, dt):
+        # Horizontal movement
+        prev_x = self.rect.x
+        self.rect.x += (self.direction.x * self.speed * dt)
+        self.collisions('horizontal')
+
+        # Vertical movement
+        prev_y = self.rect.y
+        self.rect.y += (self.direction.y * self.gravity * dt)
+
+        self.collisions('vertical')    
     def collisions(self, direction):
         for sprite in self.collision:
             if sprite.rect.colliderect(self.rect):
@@ -106,17 +118,7 @@ class Player(object):
                         self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
 
-    def move(self, dt):
-        # Horizontal movement
-        prev_x = self.rect.x
-        self.rect.x += self.direction.x * self.speed * dt
-        self.collisions('horizontal')
 
-        # Vertical movement
-        prev_y = self.rect.y
-        self.rect.y += self.direction.y * self.gravity * dt
-
-        self.collisions('vertical')
 
 
 
