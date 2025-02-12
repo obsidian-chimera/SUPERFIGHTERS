@@ -108,15 +108,15 @@ class Player(object):
         #      self.direction.y = -20
 
 
-    # def move(self, dt):
-    #     # Horizontal movement
-    #     prev_x = self.rect.x
-    #     self.rect.x += (self.direction.x * self.speed * dt)
-    #     self.collisions('horizontal')
+    def move(self, dt):
+        # Horizontal movement
+        prev_x = self.rect.x
+        self.rect.x += (self.direction.x * self.speed * dt)
+        self.collisions('horizontal')
 
-    #     # Vertical movement
-    #     prev_y = self.rect.y
-    #     self.rect.y += (self.direction.y * self.gravity * dt)
+        # Vertical movement
+        prev_y = self.rect.y
+        self.rect.y += (self.direction.y * self.gravity * dt)
 
         # self.collisions('vertical')    
     def collisions(self, direction):

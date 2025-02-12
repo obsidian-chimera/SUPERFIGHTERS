@@ -110,6 +110,20 @@ class Game:
         for button in self.buttons:
             button.draw(self.screen)
 
+    def scaling_objects(self, objects, scale):
+        for obj in objects:
+            obj = {
+                'name': obj.name,
+                'x': obj.x * scale,
+                'y': obj.y * scale,
+                'width': obj.width * scale,
+                'height': obj.height * scale
+                }
+                
+        map_width = self.map.width * self.map.tilewidth
+        map_height = self.map.height * self.map.tileheight
+        scale_factor = min(resolution[0] / map_width, resolution[1] / map_height)
+
     def gameplay_screen_setup(self):
         self.buttons = []
         self.boxes = []
@@ -169,6 +183,7 @@ class Game:
         #     object((x * 64,y * 64), image, (self.sprites))
 
         for obj in self.map.objects:
+
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (50, 50))
