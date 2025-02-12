@@ -87,25 +87,25 @@ class Player(object):
 
     def input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.movement.x -= self.speed
-        if keys[pygame.K_RIGHT]:
-            self.movement.x += self.speed
-        if keys[pygame.K_UP]:
-            self.movement.y -= self.speed
-        if keys[pygame.K_DOWN]:
-            self.movement.y += self.speed
-        self.position += self.movement
-        self.player_rect.topleft = self.position
+        # if keys[pygame.K_LEFT]:
+        #     self.movement.x -= self.speed
+        # if keys[pygame.K_RIGHT]:
+        #     self.movement.x += self.speed
+        # if keys[pygame.K_UP]:
+        #     self.movement.y -= self.speed
+        # if keys[pygame.K_DOWN]:
+        #     self.movement.y += self.speed
+        # self.position += self.movement
+        # self.player_rect.topleft = self.position
 
         
-        # if keys[pygame.K_a]:
-        #     self.direction.x = -1
-        # if keys[pygame.K_d]:    
-        #     self.direction.x = 1
-        #self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
-        # if keys[pygame.K_SPACE] and self.ground:
-        #      self.direction.y = -20
+        if keys[pygame.K_a]:
+            self.direction.x = -1
+        if keys[pygame.K_d]:    
+            self.direction.x = 1
+        self.direction.x = int(keys[pygame.K_w]) - int(keys[pygame.K_a])
+        if keys[pygame.K_SPACE] and self.ground:
+             self.direction.y = -20
 
 
     def move(self, dt):
@@ -134,15 +134,6 @@ class Player(object):
                     if self.direction.y < 0: 
                         self.rect.top = sprite.rect.bottom
                     self.direction.y = 0
-
-
-
-
-
-
-    def check_floor(self):
-        bottom_rect = pygame.FRect((0,0), (self.rect.width, 2)).move_to(midtop = self.rect.midbottom)
-        self.ground = True if bottom_rect.collidelist([sprite.rect for sprite in self.collision]) >= 0 else False
     
     # def move(self, direction):
     #     self.rect.x += direction * self.speed

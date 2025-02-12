@@ -166,6 +166,9 @@ class Game:
         #         self.player = Player((obj.x, obj.y), player_img, (self.sprites,), self.collision)
         #         self.sprites.add(self.player)
 
+        self.scaling_objects(self.map.objects, 64)
+
+
         for obj in self.map.objects:
             if obj.name == 'Instant Death':
                 rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
@@ -183,7 +186,6 @@ class Game:
         #     object((x * 64,y * 64), image, (self.sprites))
 
         for obj in self.map.objects:
-
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (50, 50))
