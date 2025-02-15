@@ -45,7 +45,7 @@ class Player:
         if keys[pygame.K_RIGHT]:
             dx = self.speed
         if keys[pygame.K_UP] and self.on_ground:  # Jump
-            self.velocity_y = -10
+            self.velocity_y = -20
             self.on_ground = False
         
         self.move(dx, dy)

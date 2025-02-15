@@ -2,7 +2,7 @@ import pygame
 import sys
 pygame.init()  # Simply initialises pygame and all its modules
 pygame.font.init()  # Initialise the fonts I want to use
-from classes import *  # Imported the classes from the classes.py file
+from old_main.classes import *  # Imported the classes from the classes.py file
 import pytmx
 
 WHITE = (255, 255, 255)
@@ -168,19 +168,26 @@ class Game:
 
         self.scaling_objects(self.map.objects, 64)
 
+        for layer in self.map.objectgroups:
+            if layer.name == "Collisions":
+                for obj in layer:
+                    rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                    self.collision.append(rect)
 
-        for obj in self.map.objects:
-            if obj.name == 'Instant Death':
-                rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                self.instadeath.append(rect)
+        # for obj in self.map.objects:
+        #     if obj.name == 'Instant Death':
+        #         rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+        #         self.instadeath.append(rect)
+
+        for layer in self.map.objectgroups:
+            if layer.name == "Instant Death":
+                for obj in layer:
+                    rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                    self.instadeath.append(rect)
 
         # for x,y, image in self.map.get_layer_by_name('Main').tiles():
         #     object((x * 64,y * 64), image, (self.sprites))
 
-        for obj in self.map.objects:
-            if obj.name == 'Collisions':
-                rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                self.collision.append(rect)
         
         # for x, y, image in self.map.get_layer_by_name('Decoration').tiles():
         #     object((x * 64,y * 64), image, (self.sprites))

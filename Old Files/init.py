@@ -1,7 +1,7 @@
 import pygame 
 import pygame_menu #Verily easily creates menu screens
 import sys
-from classes import Player, Enemy
+from old_main.classes import Player, Enemy
 
 def init():
     pygame.init() #Simply initialises pygame and all its modules

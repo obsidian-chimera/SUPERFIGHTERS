@@ -1,6 +1,6 @@
 import pygame
 import pytmx
-from classes import Player
+from old_main.classes import Player
 
 pygame.init()
 
@@ -17,14 +17,15 @@ pygame.display.set_caption("PyTMX Collision Test")
 clock = pygame.time.Clock()
 
 # Load TMX Map
-tmx_data = pytmx.load_pygame("./collisions_test/world.tmx")
+tmx_data = pytmx.load_pygame(".\collisions_test\world.tmx")
 tile_size = tmx_data.tilewidth
 
-# Get collision objects
+# Get collision objects from the 'Collisions' layer
 collision_rects = []
-for obj in tmx_data.objects:
-    if obj.name == "collision":
-        collision_rects.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
+for layer in tmx_data.objectgroups:
+    if layer.name == "Collisions":
+        for obj in layer:
+            collision_rects.append(pygame.Rect(obj.x, obj.y, obj.width, obj.height))
 
 # Ensure objects are scaled properly
 map_width = tmx_data.width * tile_size

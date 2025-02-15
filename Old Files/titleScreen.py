@@ -1,7 +1,7 @@
 import pygame
 import sys
 from init import init
-from classes import Button
+from old_main.classes import Button
 
 init()
 
