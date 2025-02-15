@@ -113,7 +113,7 @@
   <object id="59" x="2.58007" y="1537.72" width="2879.35" height="61.9216"/>
  </objectgroup>
  <objectgroup id="2" name="Players">
-  <object id="1" name="Player" x="312.064" y="258.645">
+  <object id="1" name="Player" x="323.218" y="189.492">
    <point/>
   </object>
  </objectgroup>
