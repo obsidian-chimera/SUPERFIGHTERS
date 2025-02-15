@@ -90,6 +90,31 @@ class Game:
         for button in self.buttons:
             button.draw(self.screen)
 
+    def twoplayer_screen(self, screen_colour, title_colour, resolution):
+        self.buttons = []
+        self.boxes = []
+        box_width = 500
+        box_height = 500
+        twop_box = box((box_width, box_height), ((resolution[0] - box_width) // 2, (resolution[1] - box_height) // 2), WHITE)
+        twop_box.surface.blit(icon, (0, 0))
+        self.boxes.append(twop_box)
+
+        start_game = Button("BEGIN", ((((resolution[0] - 100) // 2), 3 * ((resolution[1]- 100) // 4)+60)), (100, 100), WHITE)
+        self.buttons.append(start_game)
+
+        pygame.display.set_caption("TWO Player Mode")
+        self.screen.fill(screen_colour)
+        
+        title_text = small_title.render("SUPERFIGHTERS", True, title_colour)
+        main_text_width = title_text.get_width()
+        main_text_height = title_text.get_height()
+        self.screen.blit(title_text, ((resolution[0] - main_text_width) // 2, (resolution[1] - 800 - main_text_height) // 2))
+        for box_item in self.boxes:
+            box_item.draw(self.screen)
+        for button in self.buttons:
+            button.draw(self.screen)
+
+
     def scalefactor(self, tmx_data, resolution):
         map_width = tmx_data.width * tmx_data.tilewidth
         map_height = tmx_data.height * tmx_data.tileheight
@@ -111,7 +136,7 @@ class Game:
                         surface.blit(scaled_tile, (x * tmx_data.tilewidth * self.scale_factor, y * tmx_data.tileheight*self.scale_factor))
 
 
-    def gameplay_screen_setup(self):
+    def onep_gameplay_screen_setup(self):
         self.buttons = []
         self.boxes = []
         pygame.display.set_caption("Gameplay")
@@ -123,28 +148,68 @@ class Game:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (40, 40))
-                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision)
+                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision, self.instadeath)
                 self.sprites.add(self.player)
 
 
         for x, y, gid in self.map.get_layer_by_name("Main"):
             if gid != 0:
-                rect_x = x * self.map.tilewidth
-                rect_y = y * self.map.tileheight
-                rect_width = self.map.tilewidth
-                rect_height = self.map.tileheight
-
-                # Apply scale factor correctly
-                rect_x *= self.scale_factor
-                rect_y *= self.scale_factor
-                rect_width *= self.scale_factor
-                rect_height *= self.scale_factor
+                rect_x = x * self.map.tilewidth * self.scale_factor
+                rect_y = y * self.map.tileheight * self.scale_factor
+                rect_width = self.map.tilewidth * self.scale_factor
+                rect_height = self.map.tileheight * self.scale_factor
 
                 self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+        
+        for x, y, gid in self.map.get_layer_by_name("INSTADEATH"):
+            if gid != 0:
+                rect_x = x * self.map.tilewidth * self.scale_factor
+                rect_y = y * self.map.tileheight * self.scale_factor
+                rect_width = self.map.tilewidth * self.scale_factor
+                rect_height = self.map.tileheight * self.scale_factor
+
+                self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+
+    def twop_gameplay_screen_setup(self):
+        self.buttons = []
+        self.boxes = []
+        pygame.display.set_caption("TwoPlayerGameplay")
+        self.map = self.load_tmx_map("./Maps/world.tmx")
+        self.screen.fill(BACKGROUND)
+        self.scale_factor = self.scalefactor(self.map, resolution)
+
+        for obj in self.map.objects:
+            if obj.name == 'Player':
+                player_img = pygame.image.load("./images/player.webp").convert_alpha()
+                player_img = pygame.transform.scale(player_img, (40, 40))
+                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision, self.instadeath)
+                self.sprites.add(self.player)
+        
+        for obj in self.map.objects:
+            if obj.name == 'Player2':
+                player2_img = pygame.image.load("./images/old_player.webp").convert_alpha()
+                player2_img = pygame.transform.scale(player2_img, (40, 40))
+                self.player2 = Player2((obj.x * self.scale_factor, obj.y * self.scale_factor), player2_img, self.collision, self.instadeath)
+                self.sprites.add(self.player2)
 
 
+        for x, y, gid in self.map.get_layer_by_name("Main"):
+            if gid != 0:
+                rect_x = x * self.map.tilewidth * self.scale_factor
+                rect_y = y * self.map.tileheight * self.scale_factor
+                rect_width = self.map.tilewidth * self.scale_factor
+                rect_height = self.map.tileheight * self.scale_factor
 
+                self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+        
+        for x, y, gid in self.map.get_layer_by_name("INSTADEATH"):
+            if gid != 0:
+                rect_x = x * self.map.tilewidth * self.scale_factor
+                rect_y = y * self.map.tileheight * self.scale_factor
+                rect_width = self.map.tilewidth * self.scale_factor
+                rect_height = self.map.tileheight * self.scale_factor
 
+                self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
 
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
@@ -153,6 +218,8 @@ class Game:
         self.sprites.draw(self.screen)
         for rect in self.collision:
             pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
+        for rect in self.instadeath:
+            pygame.draw.rect(self.screen, (0, 0, 255), rect, 2)
 
     def run(self):
         screen_selector = "start"
@@ -194,18 +261,36 @@ class Game:
                                 if onep_button.text == "BEGIN":
                                     screen_selector = "GAMEPLAY"
                                     print("GAMEPLAY")
-                    
+                
+                if screen_selector == "TWO PLAYER":
+                    for twop_button in self.buttons:
+                        if twop_button.rect.collidepoint(mouse_loc):
+                            if twop_button.text == "BEGIN":
+                                screen_selector = "2PGAMEPLAY"
+                                print("Two Player Mode")
+
+
+
             if screen_selector == "start":
                 self.start_screen(BLACK, WHITE, resolution)
 
             if screen_selector == "MAIN":
                 self.choice_screen(BLACK, WHITE, resolution)
-            
+
             if screen_selector == "ONE PLAYER":
                 self.oneplayer_screen(BLACK, WHITE, resolution)
+            
+            if screen_selector == "TWO PLAYER":
+                self.twoplayer_screen(BLACK, WHITE, resolution)
 
             if screen_selector == "GAMEPLAY":
-                self.gameplay_screen_setup()
+                self.sprites.empty()  # Clear old sprites
+                self.onep_gameplay_screen_setup()
+                screen_selector = "GAMEPLAY LOOP"
+
+            if screen_selector == "2PGAMEPLAY":
+                self.sprites.empty()  # Clear old sprites
+                self.twop_gameplay_screen_setup()
                 screen_selector = "GAMEPLAY LOOP"
 
             if screen_selector == "GAMEPLAY LOOP":

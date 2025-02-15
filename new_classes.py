@@ -94,13 +94,16 @@ class Object(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 class Player(Object):
-    def __init__(self, position, image, collision_rects):
+    def __init__(self, position, image, collision_rects, instadeath):
         super().__init__(position, image)
-        self.speed = 3
+        self.starting_position = position
+        self.speed = 5
         self.g_constant = 1
         self.velocity_y = 0
         self.on_ground = False
         self.collision_rects = collision_rects
+        self.instadeath_rects = instadeath
+        self.lives = 3
 
     def move(self, dx, dy):
         # Move horizontally
@@ -139,13 +142,100 @@ class Player(Object):
             dx = -self.speed
         if keys[pygame.K_d]:
             dx = self.speed
-        if keys[pygame.K_w] and self.on_ground:
-            self.velocity_y = -20
+        if keys[pygame.K_SPACE] and self.on_ground:
+            self.velocity_y = -15
             self.on_ground = False
 
         self.move(dx, 0)
 
+    def instadeath(self):
+        for rect in self.instadeath_rects:
+            if self.rect.colliderect(rect):
+                print("You died!")
+                self.lives -= 1
+                print(f"Lives: {self.lives}")
+                if self.lives == 0:
+                    print("Game over!")
+                    self.kill()
+                else:
+                    self.rect.topleft = self.starting_position
+
+
     def update(self):
+        self.instadeath()
+        self.input()
+        self.gravity()
+
+class Player2(Object):
+    def __init__(self, position, image, collision_rects, instadeath):
+        super().__init__(position, image)
+        self.starting_position = position
+        self.speed = 5
+        self.g_constant = 1
+        self.velocity_y = 0
+        self.on_ground = False
+        self.collision_rects = collision_rects
+        self.instadeath_rects = instadeath
+        self.lives = 3
+
+    def move(self, dx, dy):
+        # Move horizontally
+        self.rect.x += dx
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dx > 0:  # Moving right
+                    self.rect.right = rect.left
+                elif dx < 0:  # Moving left
+                    self.rect.left = rect.right
+
+        # Move vertically
+        self.rect.y += dy
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dy > 0:  # Moving down
+                    self.rect.bottom = rect.top
+                    self.on_ground = True
+                    self.velocity_y = 0
+                elif dy < 0:  # Moving up
+                    self.rect.top = rect.bottom
+                    self.velocity_y = 0
+
+    def gravity(self):
+        if not self.on_ground:
+            self.velocity_y += self.g_constant
+            if self.velocity_y > 10:  # Terminal velocity
+                self.velocity_y = 10
+        self.on_ground = False
+        self.move(0, self.velocity_y)
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+        dx = 0
+        if keys[pygame.K_LEFT]:
+            dx = -self.speed
+        if keys[pygame.K_RIGHT]:
+            dx = self.speed
+        if keys[pygame.K_UP] and self.on_ground:
+            self.velocity_y = -15
+            self.on_ground = False
+
+        self.move(dx, 0)
+
+    def instadeath(self):
+        for rect in self.instadeath_rects:
+            if self.rect.colliderect(rect):
+                print("You died!")
+                self.lives -= 1
+                print(f"Lives: {self.lives}")
+                if self.lives == 0:
+                    print("Game over!")
+                    self.kill()
+                else:
+                    self.rect.topleft = self.starting_position
+
+
+    def update(self):
+        self.instadeath()
         self.input()
         self.gravity()
 

@@ -7,7 +7,7 @@ RED = (255, 0, 0)
 BLUE = (127, 255, 212)
 BACKGROUND = '#fcdfcd'
 
-FRAMERATE = 60
+FRAMERATE = 100
 
 display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
 resolution = display_list[0]
