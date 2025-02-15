@@ -16,3 +16,7 @@ I also need to consult my teacher on how exactly we are supposed to reference si
   - Pygame is rather rudimentary for maze creation so I found a tool called Tiled Map Editor and a library called pytmx that would enable the game to be much better but I don't know if that leads to dropped marks since it is not my own code or algorithm then
     - Currently avoiding using this without consulting my teacher
  
+
+## UPDATE: February 
+
+I have completed much more of the code and have worked in an iterative fashion and through following the sprints that I organised earlier. These sprints enabled me to create a cohesive solution, however, there were *MANY MANY MANY* hiccups on the journey. 
