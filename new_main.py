@@ -121,13 +121,16 @@ class Game:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (40, 40))
-                Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, (self.sprites), self.collision)        
-        
+                Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, (self.sprites), self.collision)
 
-    def gameplay_screen(self,dt):
+        for x, y, gid in self.map.get_layer_by_name("Main"):
+            if gid != 0:
+                self.collision.append(pygame.Rect(x * self.map.tilewidth * self.scale_factor, y * self.map.tileheight * self.scale_factor, self.map.tilewidth * self.scale_factor, self.map.tileheight * self.scale_factor))
+
+    def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
         self.render_map(self.screen, self.map, resolution)
-        self.sprites.update(dt)
+        self.sprites.update()
         self.sprites.draw(self.screen)
 
     def run(self):
@@ -185,11 +188,11 @@ class Game:
                 screen_selector = "GAMEPLAY LOOP"
 
             if screen_selector == "GAMEPLAY LOOP":
-                self.gameplay_screen(self.clock.tick(100) / 1000)
+                self.gameplay_screen()
 
 
             pygame.display.update()
-            self.clock.tick(100)
+            self.clock.tick(FRAMERATE)
 
         pygame.quit()
         sys.exit()

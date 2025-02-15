@@ -1,6 +1,6 @@
 import pygame
 import pytmx
-from old_main.classes import Player
+from classes import Player
 
 pygame.init()
 

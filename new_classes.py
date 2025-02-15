@@ -47,7 +47,7 @@ class object(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-    def update(self, dt=None):
+    def update(self):
         pass
 
 class Player(object):
@@ -56,7 +56,7 @@ class Player(object):
         self.speed = 400
         self.gravity = 1
         self.shooting = False
-        self.direction = pygame.Vector2(0, 1)
+        self.direction = pygame.Vector2(0, 0)
         self.collision = collision
         self.ground = False
         self.player_rect = pygame.Rect(position, image.get_size())
@@ -70,4 +70,42 @@ class Player(object):
             self.direction.x = -1
         if keys[pygame.K_d]:    
             self.direction.x = 1
-        self.direction.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])   
+        if keys[pygame.K_w]:
+            self.direction.y = -1
+        if keys[pygame.K_s]:
+            self.direction.y = 1
+        # self.direction.x = int(keys[pygame.K_d]) - int(keys[pygame.K_a])   
+        # self.direction.y = int(keys[pygame.K_w]) - int(keys[pygame.K_s])
+    
+    def collision_check(self):
+        self.collided = False
+        if self.player_rect.left < 0 or self.player_rect.right > resolution[0] or self.player_rect.top < 0 or self.player_rect.bottom > resolution[1]:
+            self.collided = True
+        for rect in self.collision:
+            if self.player_rect.colliderect(rect):
+                self.collided = True
+                break
+        return self.collided
+    
+    def grounded(self):
+        self.ground = False
+        if self.collision_check():
+            return True
+        
+    def move(self):
+        new_x = self.player_rect.x + (self.direction.x * self.speed)
+        new_y = self.player_rect.y + (self.direction.y * self.speed)
+
+        if not self.grounded():
+            gravity = self.player_rect.y + self.gravity
+            self.player_rect.move(0,gravity) 
+
+        if not self.collision_check():
+            self.player_rect.move(new_x,new_y)
+        else:
+            pass
+
+    def update(self):
+        self.input()
+        self.move()
+
