@@ -93,13 +93,6 @@ class Object(pygame.sprite.Sprite):
     def draw(self, screen):
         screen.blit(self.image, self.rect)
 
-class CollisionTile(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height):
-        super().__init__()
-        self.image = pygame.Surface((width, height))
-        self.image.fill((255, 0, 0, 100))  # Semi-transparent red for debugging
-        self.rect = pygame.Rect(x, y, width, height)
-
 class Player(Object):
     def __init__(self, position, image, collision_rects):
         super().__init__(position, image)

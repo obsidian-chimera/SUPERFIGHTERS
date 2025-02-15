@@ -90,24 +90,24 @@ class Game:
         for button in self.buttons:
             button.draw(self.screen)
 
-
+    def scalefactor(self, tmx_data, resolution):
+        map_width = tmx_data.width * tmx_data.tilewidth
+        map_height = tmx_data.height * tmx_data.tileheight
+        screen_width, screen_height = resolution
+        scale_factor = min(screen_width / map_width, screen_height / map_height)
+        return scale_factor
 
     def load_tmx_map(self, filename):
         return pytmx.load_pygame(filename)
 
-    def render_map(self, surface, tmx_data, resolution):
-        map_width = tmx_data.width * tmx_data.tilewidth
-        map_height = tmx_data.height * tmx_data.tileheight
-        screen_width, screen_height = resolution
-        self.scale_factor = min(screen_width / map_width, screen_height / map_height)
-
+    def render_map(self, surface, tmx_data):
+        self.scale_factor = self.scalefactor(tmx_data, resolution)
         for layer in tmx_data.visible_layers:
             if isinstance(layer, pytmx.TiledTileLayer):
                 for x, y, gid in layer:
                     tile = tmx_data.get_tile_image_by_gid(gid)
                     if tile:
                         scaled_tile = pygame.transform.scale(tile, (int(tmx_data.tilewidth * self.scale_factor), int(tmx_data.tileheight * self.scale_factor)))
-                        self.collision.append(tile.get_bounding_rect())
                         surface.blit(scaled_tile, (x * tmx_data.tilewidth * self.scale_factor, y * tmx_data.tileheight*self.scale_factor))
 
 
@@ -117,23 +117,42 @@ class Game:
         pygame.display.set_caption("Gameplay")
         self.map = self.load_tmx_map("./Maps/world.tmx")
         self.screen.fill(BACKGROUND)
+        self.scale_factor = self.scalefactor(self.map, resolution)
 
         for obj in self.map.objects:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (40, 40))
-                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor),player_img,self.collision)
+                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision)
                 self.sprites.add(self.player)
 
-        # for x, y, gid in self.map.get_layer_by_name("Main"):
-        #     if gid != 0:
-        #         self.collision.append(pygame.Rect(x * self.map.tilewidth * self.scale_factor, y * self.map.tileheight * self.scale_factor, self.map.tilewidth * self.scale_factor, self.map.tileheight * self.scale_factor))
+
+        for x, y, gid in self.map.get_layer_by_name("Main"):
+            if gid != 0:
+                rect_x = x * self.map.tilewidth
+                rect_y = y * self.map.tileheight
+                rect_width = self.map.tilewidth
+                rect_height = self.map.tileheight
+
+                # Apply scale factor correctly
+                rect_x *= self.scale_factor
+                rect_y *= self.scale_factor
+                rect_width *= self.scale_factor
+                rect_height *= self.scale_factor
+
+                self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+
+
+
+
 
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
-        self.render_map(self.screen, self.map, resolution)
+        self.render_map(self.screen, self.map)
         self.sprites.update()
         self.sprites.draw(self.screen)
+        for rect in self.collision:
+            pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
 
     def run(self):
         screen_selector = "start"
