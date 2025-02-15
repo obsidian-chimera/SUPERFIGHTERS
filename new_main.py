@@ -107,6 +107,7 @@ class Game:
                     tile = tmx_data.get_tile_image_by_gid(gid)
                     if tile:
                         scaled_tile = pygame.transform.scale(tile, (int(tmx_data.tilewidth * self.scale_factor), int(tmx_data.tileheight * self.scale_factor)))
+                        self.collision.append(tile.get_bounding_rect())
                         surface.blit(scaled_tile, (x * tmx_data.tilewidth * self.scale_factor, y * tmx_data.tileheight*self.scale_factor))
 
 
@@ -121,11 +122,12 @@ class Game:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
                 player_img = pygame.transform.scale(player_img, (40, 40))
-                Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, (self.sprites), self.collision)
+                self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor),player_img,self.collision)
+                self.sprites.add(self.player)
 
-        for x, y, gid in self.map.get_layer_by_name("Main"):
-            if gid != 0:
-                self.collision.append(pygame.Rect(x * self.map.tilewidth * self.scale_factor, y * self.map.tileheight * self.scale_factor, self.map.tilewidth * self.scale_factor, self.map.tileheight * self.scale_factor))
+        # for x, y, gid in self.map.get_layer_by_name("Main"):
+        #     if gid != 0:
+        #         self.collision.append(pygame.Rect(x * self.map.tilewidth * self.scale_factor, y * self.map.tileheight * self.scale_factor, self.map.tilewidth * self.scale_factor, self.map.tileheight * self.scale_factor))
 
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
