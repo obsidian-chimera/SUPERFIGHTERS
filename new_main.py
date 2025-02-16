@@ -216,6 +216,13 @@ class Game:
         self.render_map(self.screen, self.map)
         self.sprites.update()
         self.sprites.draw(self.screen)
+
+        for player in self.sprites:
+            if isinstance(player, Player) or isinstance(player, Player2):
+                player.bullets.draw(self.screen)
+
+
+
         for rect in self.collision:
             pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
         for rect in self.instadeath:
