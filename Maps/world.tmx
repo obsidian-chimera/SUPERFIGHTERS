@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="45" height="25" tilewidth="64" tileheight="64" infinite="0" nextlayerid="8" nextobjectid="64">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="45" height="25" tilewidth="64" tileheight="64" infinite="0" nextlayerid="11" nextobjectid="188">
  <editorsettings>
   <chunksize width="12" height="12"/>
  </editorsettings>
@@ -91,6 +91,360 @@
 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5
 </data>
  </layer>
+ <objectgroup id="8" name="Checkpoint">
+  <object id="66" name="Checkpoint" x="926.667" y="829.333">
+   <point/>
+  </object>
+  <object id="67" name="Checkpoint" x="898.667" y="500">
+   <point/>
+  </object>
+  <object id="68" name="Checkpoint" x="1150.67" y="440">
+   <point/>
+  </object>
+  <object id="69" name="Checkpoint" x="1436" y="314.667">
+   <point/>
+  </object>
+  <object id="70" name="Checkpoint" x="1725.33" y="190.667">
+   <point/>
+  </object>
+  <object id="72" name="Checkpoint" x="2074.67" y="186.667">
+   <point/>
+  </object>
+  <object id="73" name="Checkpoint" x="2173.33" y="321.333">
+   <point/>
+  </object>
+  <object id="74" name="Checkpoint" x="2405.33" y="386.667">
+   <point/>
+  </object>
+  <object id="75" name="Checkpoint" x="2690.67" y="381.333">
+   <point/>
+  </object>
+  <object id="76" name="Checkpoint" x="1485.33" y="505.333">
+   <point/>
+  </object>
+  <object id="77" name="Checkpoint" x="1694.67" y="570.667">
+   <point/>
+  </object>
+  <object id="78" name="Checkpoint" x="1760" y="640">
+   <point/>
+  </object>
+  <object id="79" name="Checkpoint" x="1888" y="701.333">
+   <point/>
+  </object>
+  <object id="80" name="Checkpoint" x="2013.33" y="770.667">
+   <point/>
+  </object>
+  <object id="81" name="Checkpoint" x="2142.67" y="832">
+   <point/>
+  </object>
+  <object id="82" name="Checkpoint" x="2274.67" y="901.333">
+   <point/>
+  </object>
+  <object id="83" name="Checkpoint" x="2382.67" y="966.667">
+   <point/>
+  </object>
+  <object id="84" name="Checkpoint" x="2204" y="1022.67">
+   <point/>
+  </object>
+  <object id="85" name="Checkpoint" x="2110.67" y="1088">
+   <point/>
+  </object>
+  <object id="86" name="Checkpoint" x="1956" y="1149.33">
+   <point/>
+  </object>
+  <object id="87" name="Checkpoint" x="1797.33" y="1209.33">
+   <point/>
+  </object>
+  <object id="88" name="Checkpoint" x="1664" y="1280">
+   <point/>
+  </object>
+  <object id="89" name="Checkpoint" x="1472" y="1218.67">
+   <point/>
+  </object>
+  <object id="90" name="Checkpoint" x="1346.67" y="962.667">
+   <point/>
+  </object>
+  <object id="91" name="Checkpoint" x="1146.67" y="1214.67">
+   <point/>
+  </object>
+  <object id="92" name="Checkpoint" x="748" y="1209.33">
+   <point/>
+  </object>
+  <object id="93" name="Checkpoint" x="513.333" y="1148">
+   <point/>
+  </object>
+  <object id="94" name="Checkpoint" x="636" y="448">
+   <point/>
+  </object>
+  <object id="95" name="Checkpoint" x="322.667" y="513.333">
+   <point/>
+  </object>
+  <object id="96" name="Checkpoint" x="94.6667" y="573.333">
+   <point/>
+  </object>
+  <object id="97" name="Checkpoint" x="160" y="700">
+   <point/>
+  </object>
+  <object id="98" name="Checkpoint" x="401.333" y="830.667">
+   <point/>
+  </object>
+  <object id="99" name="Checkpoint" x="216" y="825.333">
+   <point/>
+  </object>
+  <object id="100" name="Checkpoint" x="94.6667" y="1086.67">
+   <point/>
+  </object>
+  <object id="101" name="Checkpoint" x="158.667" y="1150.67">
+   <point/>
+  </object>
+  <object id="102" name="Checkpoint" x="285.333" y="1281.33">
+   <point/>
+  </object>
+  <object id="103" name="Checkpoint" x="412" y="1408">
+   <point/>
+  </object>
+  <object id="104" name="Checkpoint" x="294.667" y="1468">
+   <point/>
+  </object>
+  <object id="105" name="Checkpoint" x="613.333" y="1469.33">
+   <point/>
+  </object>
+  <object id="106" name="Checkpoint" x="921.333" y="1473.33">
+   <point/>
+  </object>
+  <object id="107" name="Checkpoint" x="1252" y="1469.33">
+   <point/>
+  </object>
+  <object id="108" name="Checkpoint" x="1480" y="1469.33">
+   <point/>
+  </object>
+  <object id="109" name="Checkpoint" x="1790.67" y="1473.33">
+   <point/>
+  </object>
+  <object id="110" name="Checkpoint" x="2040" y="1477.33">
+   <point/>
+  </object>
+  <object id="111" name="Checkpoint" x="2285.33" y="1473.33">
+   <point/>
+  </object>
+  <object id="112" name="Checkpoint" x="2500" y="1478.67">
+   <point/>
+  </object>
+  <object id="113" name="Checkpoint" x="2690.67" y="1464">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="9" name="Jumppoint">
+  <object id="114" name="Jumppoint" x="570.667" y="826.667" visible="0">
+   <point/>
+  </object>
+  <object id="115" name="Jumppoint" x="716" y="826.667">
+   <point/>
+  </object>
+  <object id="116" name="Jumppoint" x="1144" y="832">
+   <point/>
+  </object>
+  <object id="117" name="Jumppoint" x="1284" y="957.333">
+   <point/>
+  </object>
+  <object id="118" name="Jumppoint" x="1405.33" y="962.667">
+   <point/>
+  </object>
+  <object id="119" name="Jumppoint" x="968" y="445.333">
+   <point/>
+  </object>
+  <object id="120" name="Jumppoint" x="1332" y="445.333">
+   <point/>
+  </object>
+  <object id="121" name="Jumppoint" x="1406.67" y="318.667">
+   <point/>
+  </object>
+  <object id="122" name="Jumppoint" x="1476" y="318.667">
+   <point/>
+  </object>
+  <object id="123" name="Jumppoint" x="1550.67" y="192">
+   <point/>
+  </object>
+  <object id="124" name="Jumppoint" x="1920" y="193.333">
+   <point/>
+  </object>
+  <object id="125" name="Jumppoint" x="2049.33" y="192">
+   <point/>
+  </object>
+  <object id="126" name="Jumppoint" x="2109.33" y="192">
+   <point/>
+  </object>
+  <object id="127" name="Jumppoint" x="2333.33" y="380">
+   <point/>
+  </object>
+  <object id="128" name="Jumppoint" x="2128" y="322.667">
+   <point/>
+  </object>
+  <object id="129" name="Jumppoint" x="66.6667" y="580">
+   <point/>
+  </object>
+  <object id="131" name="Jumppoint" x="128" y="580">
+   <point/>
+  </object>
+  <object id="132" name="Jumppoint" x="268" y="510.667">
+   <point/>
+  </object>
+  <object id="133" name="Jumppoint" x="380" y="510.667">
+   <point/>
+  </object>
+  <object id="134" name="Jumppoint" x="524" y="444">
+   <point/>
+  </object>
+  <object id="135" name="Jumppoint" x="758.667" y="449.333">
+   <point/>
+  </object>
+  <object id="136" name="Jumppoint" x="846.667" y="510.667">
+   <point/>
+  </object>
+  <object id="137" name="Jumppoint" x="178.667" y="704">
+   <point/>
+  </object>
+  <object id="138" name="Jumppoint" x="77.3333" y="833.333">
+   <point/>
+  </object>
+  <object id="139" name="Jumppoint" x="324" y="829.333">
+   <point/>
+  </object>
+  <object id="140" name="Jumppoint" x="62.6667" y="1090.67">
+   <point/>
+  </object>
+  <object id="141" name="Jumppoint" x="128" y="1090.67">
+   <point/>
+  </object>
+  <object id="142" name="Jumppoint" x="189.333" y="1150.67">
+   <point/>
+  </object>
+  <object id="143" name="Jumppoint" x="268" y="1285.33">
+   <point/>
+  </object>
+  <object id="144" name="Jumppoint" x="314.667" y="1281.33">
+   <point/>
+  </object>
+  <object id="145" name="Jumppoint" x="460" y="1146.67">
+   <point/>
+  </object>
+  <object id="146" name="Jumppoint" x="566.667" y="1150.67">
+   <point/>
+  </object>
+  <object id="147" name="Jumppoint" x="669.333" y="1216">
+   <point/>
+  </object>
+  <object id="148" name="Jumppoint" x="953.333" y="1212">
+   <point/>
+  </object>
+  <object id="149" name="Jumppoint" x="1098.67" y="1216">
+   <point/>
+  </object>
+  <object id="150" name="Jumppoint" x="1192" y="1220">
+   <point/>
+  </object>
+  <object id="151" name="Jumppoint" x="1357.33" y="1216">
+   <point/>
+  </object>
+  <object id="152" name="Jumppoint" x="1590.67" y="1221.33">
+   <point/>
+  </object>
+  <object id="153" name="Jumppoint" x="1740" y="1220">
+   <point/>
+  </object>
+  <object id="154" name="Jumppoint" x="1641.33" y="1281.33">
+   <point/>
+  </object>
+  <object id="155" name="Jumppoint" x="1701.33" y="1281.33">
+   <point/>
+  </object>
+  <object id="156" name="Jumppoint" x="1837.33" y="1220">
+   <point/>
+  </object>
+  <object id="157" name="Jumppoint" x="1865.33" y="1154.67">
+   <point/>
+  </object>
+  <object id="160" name="Jumppoint" x="2018.67" y="1150.67">
+   <point/>
+  </object>
+  <object id="161" name="Jumppoint" x="2061.33" y="1085.33">
+   <point/>
+  </object>
+  <object id="162" name="Jumppoint" x="2154.67" y="1085.33">
+   <point/>
+  </object>
+  <object id="163" name="Jumppoint" x="2182.67" y="1022.67">
+   <point/>
+  </object>
+  <object id="164" name="Jumppoint" x="2233.33" y="1022.67">
+   <point/>
+  </object>
+  <object id="165" name="Jumppoint" x="2246.67" y="896">
+   <point/>
+  </object>
+  <object id="166" name="Jumppoint" x="2302.67" y="896">
+   <point/>
+  </object>
+  <object id="167" name="Jumppoint" x="2336" y="957.333">
+   <point/>
+  </object>
+  <object id="168" name="Jumppoint" x="2425.33" y="957.333">
+   <point/>
+  </object>
+  <object id="169" name="Jumppoint" x="2181.33" y="822.667">
+   <point/>
+  </object>
+  <object id="170" name="Jumppoint" x="2117.33" y="826.667">
+   <point/>
+  </object>
+  <object id="171" name="Jumppoint" x="2046.67" y="766.667">
+   <point/>
+  </object>
+  <object id="173" name="Jumppoint" x="1990.67" y="770.667">
+   <point/>
+  </object>
+  <object id="174" name="Jumppoint" x="1916" y="706.667">
+   <point/>
+  </object>
+  <object id="175" name="Jumppoint" x="1865.33" y="710.667">
+   <point/>
+  </object>
+  <object id="176" name="Jumppoint" x="1790.67" y="641.333">
+   <point/>
+  </object>
+  <object id="177" name="Jumppoint" x="1738.67" y="640">
+   <point/>
+  </object>
+  <object id="178" name="Jumppoint" x="1729.33" y="574.667">
+   <point/>
+  </object>
+  <object id="179" name="Jumppoint" x="1677.33" y="576">
+   <point/>
+  </object>
+  <object id="180" name="Jumppoint" x="1649.33" y="510.667">
+   <point/>
+  </object>
+  <object id="182" name="Jumppoint" x="1436" y="508">
+   <point/>
+  </object>
+  <object id="183" name="Jumppoint" x="392" y="1408">
+   <point/>
+  </object>
+  <object id="184" name="Jumppoint" x="448" y="1416">
+   <point/>
+  </object>
+  <object id="185" name="Jumppoint" x="554.667" y="1472">
+   <point/>
+  </object>
+  <object id="186" name="Jumppoint" x="353.333" y="1472">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="10" name="Enemy">
+  <object id="187" name="Enemy" x="1058" y="688">
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="4" name="Collisions">
   <object id="11" x="2.58007" y="1078.47" width="126.423" height="72.2419"/>
   <object id="12" x="67.0817" y="1150.71" width="123.843" height="61.9216"/>

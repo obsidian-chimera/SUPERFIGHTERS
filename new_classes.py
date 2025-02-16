@@ -1,4 +1,5 @@
 import pygame
+import math
 from settings import *
 
 class Button:
@@ -313,12 +314,10 @@ class Bullet(pygame.sprite.Sprite):
                 if self.rect.colliderect(rect):
                     self.kill()
         
-        for player in pygame.sprite.spritecollide(self, self.owner.game.sprites, False):
-            if isinstance(player, (Player, Player2)) and player != self.owner:  # Ensure bullet doesn't hit shooter
-                player.damage(20)
-                self.kill() 
-
-
+        for entity in pygame.sprite.spritecollide(self, self.owner.game.sprites, False):
+            if isinstance(entity, (Player, Player2, Enemy)) and entity != self.owner:  # Ensure bullet doesn't hit shooter
+                entity.damage(20)
+                self.kill()
 
 class Gun():
     def __init__(self, host, bullet_group, bullet_speed=10, fire_rate=10, collision_rects=[]):
@@ -334,3 +333,91 @@ class Gun():
             bullet = Bullet(self.host.rect.center, self.host.direction, self.bullet_speed, self.host, self.collision_rects)
             self.bullet_group.add(bullet)
             self.now = pygame.time.get_ticks()
+
+class Enemy(Object):
+    def __init__(self, position, image, collision_rects, instadeath, game, player):
+        super().__init__(position, image)
+        self.starting_position = position
+        self.speed = 2
+        self.g_constant = 1
+        self.velocity_y = 0
+        self.on_ground = False
+        
+        self.collision_rects = collision_rects
+        self.instadeath_rects = instadeath
+        
+        self.lives = 3
+        self.health = 100
+        
+        self.direction = 1
+        self.bullets = pygame.sprite.Group()
+        self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
+        self.game = game
+        self.player = player
+        self.path = []  
+    
+    def distance(self, point1, point2):
+        """Calculate Euclidean distance between two points."""
+        return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+    
+    def move(self, dx, dy):
+        self.rect.x += dx
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dx > 0:
+                    self.rect.right = rect.left
+                elif dx < 0:
+                    self.rect.left = rect.right
+        
+        self.rect.y += dy
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dy > 0:
+                    self.rect.bottom = rect.top
+                    self.on_ground = True
+                    self.velocity_y = 0
+                elif dy < 0:
+                    self.rect.top = rect.bottom
+                    self.velocity_y = 0
+    
+    def gravity(self):
+        if not self.on_ground:
+            self.velocity_y += self.g_constant
+            self.velocity_y = min(self.velocity_y, 10)
+        self.on_ground = False
+        self.move(0, self.velocity_y)
+
+    def instadeath(self):
+        for rect in self.instadeath_rects:
+            if self.rect.colliderect(rect):
+                print("You died!")
+                self.lives -= 1
+                if self.lives <= 0:
+                    print("Game over!")
+                    self.kill()
+                    return
+                else:
+                    print(f"Lives: {self.lives}")
+                    self.rect.topleft = self.starting_position
+
+    def damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            if self.lives == 0:
+                print("Game over!")
+                self.kill()
+            else:
+                self.lives -= 1
+                print(f"Lives: {self.lives}")
+                self.health = 100
+                self.rect.topleft = self.starting_position
+
+    def update(self):
+        self.instadeath()
+        self.gravity()
+        self.bullets.update()
+
+
+
+
+
