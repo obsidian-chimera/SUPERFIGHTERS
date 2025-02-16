@@ -207,7 +207,7 @@ class Game:
                 rect_x = x * self.map.tilewidth * self.scale_factor
                 rect_y = y * self.map.tileheight * self.scale_factor
                 rect_width = self.map.tilewidth * self.scale_factor
-                rect_height = self.map.tileheight * self.scale_factor
+                rect_height = self.map.tileheight * self.scale_factor 
 
                 self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
 

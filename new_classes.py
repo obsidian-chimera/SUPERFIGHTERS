@@ -269,15 +269,15 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=position)
         self.speed = speed
         self.direction = direction 
-        self.now = 0
+        self.now = pygame.time.get_ticks()
         self.collision_rects = collision_rects
 
     def update(self):
         self.rect.x += self.speed * self.direction  # Move bullet
         if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
             self.kill()  # Remove bullet when off-screen
-        # if pygame.time.get_ticks() - self.now > 5000:
-        #     self.kill()
+        if pygame.time.get_ticks() - self.now > 300:
+            self.kill() 
         if self.collision_rects:
             for rect in self.collision_rects:
                 if self.rect.colliderect(rect):
