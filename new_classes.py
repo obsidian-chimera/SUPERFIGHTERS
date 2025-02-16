@@ -165,11 +165,12 @@ class Player(Object):
             if self.rect.colliderect(rect):
                 print("You died!")
                 self.lives -= 1
-                print(f"Lives: {self.lives}")
-                if self.lives == 0:
+                if self.lives <= 0:
                     print("Game over!")
                     self.kill()
+                    return
                 else:
+                    print(f"Lives: {self.lives}")
                     self.rect.topleft = self.starting_position
 
     def damage(self, damage):
@@ -257,17 +258,17 @@ class Player2(Object):
             self.gun.shoot()
 
         self.move(dx, 0)
-
     def instadeath(self):
         for rect in self.instadeath_rects:
             if self.rect.colliderect(rect):
                 print("You died!")
                 self.lives -= 1
-                print(f"Lives: {self.lives}")
-                if self.lives == 0:
+                if self.lives <= 0:
                     print("Game over!")
                     self.kill()
+                    return
                 else:
+                    print(f"Lives: {self.lives}")
                     self.rect.topleft = self.starting_position
 
     def damage(self, damage):
