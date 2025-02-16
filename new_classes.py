@@ -276,8 +276,8 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.x += self.speed * self.direction  # Move bullet
         if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
             self.kill()  # Remove bullet when off-screen
-        if pygame.time.get_ticks() - self.now > 5000:
-            self.kill()
+        # if pygame.time.get_ticks() - self.now > 5000:
+        #     self.kill()
         if self.collision_rects:
             for rect in self.collision_rects:
                 if self.rect.colliderect(rect):
