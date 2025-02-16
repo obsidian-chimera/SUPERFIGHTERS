@@ -107,9 +107,9 @@ class Player(Object):
         
         self.lives = 3
 
-        self.direction = 0
+        self.direction = 1
         self.bullets = pygame.sprite.Group()
-        self.gun = Gun(self, self.bullets, self.collision_rects)
+        self.gun = Gun(self, self.bullets, collision_rects= self.collision_rects)
 
     def move(self, dx, dy):
         # Move horizontally
@@ -191,9 +191,9 @@ class Player2(Object):
         
         self.lives = 3
 
-        self.direction = 0
+        self.direction = 1
         self.bullets = pygame.sprite.Group()
-        self.gun = Gun(self, self.bullets, self.collision_rects)
+        self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
 
     def move(self, dx, dy):
         # Move horizontally
@@ -276,12 +276,12 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.x += self.speed * self.direction  # Move bullet
         if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
             self.kill()  # Remove bullet when off-screen
-        if self.now > 1000:
+        if pygame.time.get_ticks() - self.now > 5000:
             self.kill()
-            self.now = pygame.time.get_ticks()
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                self.kill()
+        if self.collision_rects:
+            for rect in self.collision_rects:
+                if self.rect.colliderect(rect):
+                    self.kill()
 
 
 

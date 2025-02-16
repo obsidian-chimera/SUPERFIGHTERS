@@ -219,8 +219,10 @@ class Game:
 
         for player in self.sprites:
             if isinstance(player, Player) or isinstance(player, Player2):
-                player.bullets.draw(self.screen)
 
+                player.bullets.draw(self.screen)
+                player.bullets.update()
+                player.bullets.draw(self.screen)
 
 
         for rect in self.collision:
