@@ -94,7 +94,7 @@ class Object(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 class Player(Object):
-    def __init__(self, position, image, collision_rects, instadeath):
+    def __init__(self, position, image, collision_rects, instadeath, current_game):
         super().__init__(position, image)
         self.starting_position = position
         self.speed = 5
@@ -106,10 +106,12 @@ class Player(Object):
         self.instadeath_rects = instadeath
         
         self.lives = 3
+        self.health = 100
 
         self.direction = 1
         self.bullets = pygame.sprite.Group()
         self.gun = Gun(self, self.bullets, collision_rects= self.collision_rects)
+        self.game = current_game
 
     def move(self, dx, dy):
         # Move horizontally
@@ -170,6 +172,18 @@ class Player(Object):
                 else:
                     self.rect.topleft = self.starting_position
 
+    def damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            if self.lives == 0:
+                print("Game over!")
+                self.kill()
+            else:
+                self.lives -= 1
+                print(f"Lives: {self.lives}")
+                self.health = 100
+                self.rect.topleft = self.starting_position
+
 
     def update(self):
         self.instadeath()
@@ -178,7 +192,7 @@ class Player(Object):
         self.bullets.update()
 
 class Player2(Object):
-    def __init__(self, position, image, collision_rects, instadeath):
+    def __init__(self, position, image, collision_rects, instadeath, current_game):
         super().__init__(position, image)
         self.starting_position = position
         self.speed = 5
@@ -190,10 +204,12 @@ class Player2(Object):
         self.instadeath_rects = instadeath
         
         self.lives = 3
+        self.health = 100
 
         self.direction = 1
         self.bullets = pygame.sprite.Group()
         self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
+        self.game = current_game
 
     def move(self, dx, dy):
         # Move horizontally
@@ -254,6 +270,18 @@ class Player2(Object):
                 else:
                     self.rect.topleft = self.starting_position
 
+    def damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            if self.lives == 0:
+                print("Game over!")
+                self.kill()
+            else:
+                self.lives -= 1
+                print(f"Lives: {self.lives}")
+                self.health = 100
+                self.rect.topleft = self.starting_position
+
 
     def update(self):
         self.instadeath()
@@ -262,7 +290,7 @@ class Player2(Object):
         self.bullets.update()
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, position, direction, speed, collision_rects):
+    def __init__(self, position, direction, speed, owner, collision_rects):
         super().__init__()
         self.image = pygame.Surface((10, 5))  
         self.image.fill(RED)
@@ -271,6 +299,7 @@ class Bullet(pygame.sprite.Sprite):
         self.direction = direction 
         self.now = pygame.time.get_ticks()
         self.collision_rects = collision_rects
+        self.owner = owner
 
     def update(self):
         self.rect.x += self.speed * self.direction  # Move bullet
@@ -282,6 +311,11 @@ class Bullet(pygame.sprite.Sprite):
             for rect in self.collision_rects:
                 if self.rect.colliderect(rect):
                     self.kill()
+        
+        for player in pygame.sprite.spritecollide(self, self.owner.game.sprites, False):
+            if isinstance(player, (Player, Player2)) and player != self.owner:  # Ensure bullet doesn't hit shooter
+                player.damage(20)
+                self.kill() 
 
 
 
@@ -296,6 +330,6 @@ class Gun():
 
     def shoot(self):
         if pygame.time.get_ticks() - self.now > 1000 // self.fire_rate:
-            bullet = Bullet(self.host.rect.center, self.host.direction, self.bullet_speed, self.collision_rects)
+            bullet = Bullet(self.host.rect.center, self.host.direction, self.bullet_speed, self.host, self.collision_rects)
             self.bullet_group.add(bullet)
             self.now = pygame.time.get_ticks()
