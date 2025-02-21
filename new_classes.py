@@ -259,6 +259,8 @@ class Player2(Object):
             self.gun.shoot()
 
         self.move(dx, 0)
+
+
     def instadeath(self):
         for rect in self.instadeath_rects:
             if self.rect.colliderect(rect):
@@ -342,43 +344,22 @@ class Enemy(Object):
         self.g_constant = 1
         self.velocity_y = 0
         self.on_ground = False
-        
+
         self.collision_rects = collision_rects
         self.instadeath_rects = instadeath
-        
+
         self.lives = 3
         self.health = 100
-        
+
         self.direction = 1
         self.bullets = pygame.sprite.Group()
         self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
         self.game = game
         self.player = player
-        self.path = []  
-    
+        self.path = []
+
     def distance(self, point1, point2):
-        """Calculate Euclidean distance between two points."""
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
-    
-    def move(self, dx, dy):
-        self.rect.x += dx
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                if dx > 0:
-                    self.rect.right = rect.left
-                elif dx < 0:
-                    self.rect.left = rect.right
-        
-        self.rect.y += dy
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                if dy > 0:
-                    self.rect.bottom = rect.top
-                    self.on_ground = True
-                    self.velocity_y = 0
-                elif dy < 0:
-                    self.rect.top = rect.bottom
-                    self.velocity_y = 0
     
     def gravity(self):
         if not self.on_ground:
@@ -412,10 +393,54 @@ class Enemy(Object):
                 self.health = 100
                 self.rect.topleft = self.starting_position
 
+    def move(self, dx=0, dy=0):
+        # Horizontal collisions
+        self.rect.x += dx
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dx > 0:
+                    self.rect.right = rect.left
+                elif dx < 0:
+                    self.rect.left = rect.right
+        
+        # Vertical collisions
+        self.rect.y += dy
+        for rect in self.collision_rects:
+            if self.rect.colliderect(rect):
+                if dy > 0:
+                    self.rect.bottom = rect.top
+                    self.on_ground = True
+                elif dy < 0:
+                    self.rect.top = rect.bottom
+
+    def check_jump(self, direction):
+            # Check if the enemy is at an edge
+            ground_below = False
+            edge_detected = False
+            for tile in self.collision_rects:
+                if tile.colliderect(self.rect.move(0,10)):
+                    ground_below = True
+                if not tile.colliderect(self.rect.move(direction, 10)):
+                    edge_detected = True
+            
+            if ground_below and edge_detected:
+                return True
+
+    def basic_motion(self):
+        if self.check_jump():
+            self.move(20, -25)
+        else:
+            self.move(1,0)
+        
+                    
+
     def update(self):
         self.instadeath()
         self.gravity()
         self.bullets.update()
+        self.basic_motion()
+
+
 
 
 

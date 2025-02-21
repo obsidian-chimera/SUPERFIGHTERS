@@ -134,36 +134,6 @@ class Game:
                     if tile:
                         scaled_tile = pygame.transform.scale(tile, (int(tmx_data.tilewidth * self.scale_factor), int(tmx_data.tileheight * self.scale_factor)))
                         surface.blit(scaled_tile, (x * tmx_data.tilewidth * self.scale_factor, y * tmx_data.tileheight*self.scale_factor))
-    
-    def load_walkable_areas(self):
-        """Detect walkable tiles and ledges from the Tiled map dynamically."""
-        self.walkable_tiles = []
-        self.ledges = []  # Stores tiles where AI needs to jump
-
-        tile_width = self.map.tilewidth * self.scale_factor
-        tile_height = self.map.tileheight * self.scale_factor
-
-        ground_tiles = {}  # Dictionary to store ground tiles for fast lookup
-
-        for x, y, gid in self.map.get_layer_by_name("Main"):
-            if gid != 0:  # Solid ground
-                tile_x = x * tile_width
-                tile_y = y * tile_height
-                ground_tiles[(x, y)] = (tile_x, tile_y)
-
-        # Identify ledges where AI should jump
-        for (x, y), (world_x, world_y) in ground_tiles.items():
-            below = (x, y + 1)  # Tile below
-            if below not in ground_tiles:  # If no solid ground below, it's a ledge
-                self.ledges.append((world_x, world_y))
-
-        # Identify all walkable tiles (above ground tiles)
-        for (x, y), (world_x, world_y) in ground_tiles.items():
-            above = (x, y - 1)  # Tile above
-            if above not in ground_tiles:  # If space above is empty, it's walkable
-                self.walkable_tiles.append((world_x, world_y))
-
-
 
     def onep_gameplay_screen_setup(self):
         self.buttons = []
@@ -172,8 +142,6 @@ class Game:
         self.map = self.load_tmx_map("./Maps/world.tmx")
         self.screen.fill(BACKGROUND)
         self.scale_factor = self.scalefactor(self.map, resolution)
-
-        self.load_walkable_areas()
 
         for obj in self.map.objects:
             if obj.name == 'Player':
@@ -257,8 +225,7 @@ class Game:
         self.sprites.draw(self.screen)
 
         for player in self.sprites:
-            if isinstance(player, Player) or isinstance(player, Player2):
-
+            if isinstance(player, Player) or isinstance(player, Player2) or isinstance(player, Enemy):
                 player.bullets.draw(self.screen)
                 player.bullets.update()
                 player.bullets.draw(self.screen)
