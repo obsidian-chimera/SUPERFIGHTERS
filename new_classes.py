@@ -358,6 +358,8 @@ class Enemy(Object):
         self.player = player
         self.path = []
 
+        self.jump_needed_collision = False
+
     def distance(self, point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
     
@@ -397,11 +399,14 @@ class Enemy(Object):
         # Horizontal collisions
         self.rect.x += dx
         for rect in self.collision_rects:
+            # self.jump_needed_collision = False
             if self.rect.colliderect(rect):
                 if dx > 0:
                     self.rect.right = rect.left
+                    self.jump_needed_collision = True
                 elif dx < 0:
                     self.rect.left = rect.right
+                    self.jump_needed_collision = True
         
         # Vertical collisions
         self.rect.y += dy
@@ -410,30 +415,38 @@ class Enemy(Object):
                 if dy > 0:
                     self.rect.bottom = rect.top
                     self.on_ground = True
+                    self.velocity_y = 0
                 elif dy < 0:
                     self.rect.top = rect.bottom
+                    self.velocity_y = 0
 
-    def check_jump(self, direction):
-            # Check if the enemy is at an edge
-            ground_below = False
-            edge_detected = False
-            for tile in self.collision_rects:
-                if tile.colliderect(self.rect.move(0,10)):
-                    ground_below = True
-                if not tile.colliderect(self.rect.move(direction, 10)):
-                    edge_detected = True
-            
-            if ground_below and edge_detected:
-                return True
+    def check_jump(self):
+        # Check if there's ground directly below
+        ground_below = False
+        for tile in self.collision_rects:
+            if tile.colliderect(self.rect.move(0, 10)):
+                ground_below = True
+                break
+
+        # Check if moving forward would result in falling off an edge
+        edge_ahead = True
+        for tile in self.collision_rects:
+            if tile.colliderect(self.rect.move(self.direction * 5, 10)):
+                edge_ahead = False
+                break
+        
+        return ground_below and edge_ahead
 
     def basic_motion(self):
-        if self.check_jump():
-            self.move(20, -25)
+        if self.check_jump() or self.jump_needed_collision:
+            self.velocity_y = -15  # Apply jump force
+            self.move(self.direction * self.speed * 10, 0)
+            self.jump_needed_collision = False
         else:
-            self.move(1,0)
+            self.move(self.direction * self.speed, 0)
         
-                    
-
+        self.gravity()
+    
     def update(self):
         self.instadeath()
         self.gravity()
