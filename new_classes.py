@@ -1,5 +1,6 @@
 import pygame
 import math
+import heapq
 from settings import *
 
 class Button:
@@ -193,56 +194,10 @@ class Player(Object):
         self.gravity()
         self.bullets.update()
 
-class Player2(Object):
+class Player2(Player):
     def __init__(self, position, image, collision_rects, instadeath, current_game):
-        super().__init__(position, image)
-        self.starting_position = position
-        self.speed = 5
-        self.g_constant = 1
-        self.velocity_y = 0
-        self.on_ground = False
+        super().__init__(position, image, collision_rects, instadeath, current_game)
         
-        self.collision_rects = collision_rects
-        self.instadeath_rects = instadeath
-        
-        self.lives = 3
-        self.health = 100
-
-        self.direction = 1
-        self.bullets = pygame.sprite.Group()
-        self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
-        self.game = current_game
-
-    def move(self, dx, dy):
-        # Move horizontally
-        self.rect.x += dx
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                if dx > 0:  # Moving right
-                    self.rect.right = rect.left
-                elif dx < 0:  # Moving left
-                    self.rect.left = rect.right
-
-        # Move vertically
-        self.rect.y += dy
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                if dy > 0 :  # Moving down
-                    self.rect.bottom = rect.top
-                    self.on_ground = True
-                    self.velocity_y = 0
-                elif dy < 0:  # Moving up
-                    self.rect.top = rect.bottom
-                    self.velocity_y = 0
-
-    def gravity(self):
-        if not self.on_ground:
-            self.velocity_y += self.g_constant
-            if self.velocity_y > 10:  # Terminal velocity
-                self.velocity_y = 10
-        self.on_ground = False
-        self.move(0, self.velocity_y)
-
     def input(self):
         keys = pygame.key.get_pressed()
         dx = 0
@@ -259,39 +214,6 @@ class Player2(Object):
             self.gun.shoot()
 
         self.move(dx, 0)
-
-
-    def instadeath(self):
-        for rect in self.instadeath_rects:
-            if self.rect.colliderect(rect):
-                print("You died!")
-                self.lives -= 1
-                if self.lives <= 0:
-                    print("Game over!")
-                    self.kill()
-                    return
-                else:
-                    print(f"Lives: {self.lives}")
-                    self.rect.topleft = self.starting_position
-
-    def damage(self, damage):
-        self.health -= damage
-        if self.health <= 0:
-            if self.lives == 0:
-                print("Game over!")
-                self.kill()
-            else:
-                self.lives -= 1
-                print(f"Lives: {self.lives}")
-                self.health = 100
-                self.rect.topleft = self.starting_position
-
-
-    def update(self):
-        self.instadeath()
-        self.input()
-        self.gravity()
-        self.bullets.update()
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, position, direction, speed, owner, collision_rects):
@@ -335,6 +257,19 @@ class Gun():
             bullet = Bullet(self.host.rect.center, self.host.direction, self.bullet_speed, self.host, self.collision_rects)
             self.bullet_group.add(bullet)
             self.now = pygame.time.get_ticks()
+
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+    
+    def empty(self):
+        return len(self.elements) == 0
+    
+    def put(self, item, priority):
+        heapq.heappush(self.elements, (priority, item))
+    
+    def get(self):
+        return heapq.heappop(self.elements)[1]
 
 class Enemy(Object):
     def __init__(self, position, image, collision_rects, instadeath, game, player):
@@ -443,7 +378,7 @@ class Enemy(Object):
             self.move(self.direction * self.speed * 10, 0)
             self.jump_needed_collision = False
         else:
-            self.move(self.direction * self.speed, 0)
+            self.move(-(self.direction * self.speed), 0)
         
         self.gravity()
     
