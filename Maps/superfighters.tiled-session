@@ -33,11 +33,11 @@
             "scaleInDock": 1
         },
         "world.tmx": {
-            "scale": 0.44828124999999996,
-            "selectedLayer": 2,
+            "scale": 0.33,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1439.944231439526,
-                "y": 800.8365284071104
+                "x": 1080.3030303030303,
+                "y": 1000
             }
         }
     },

@@ -1,0 +1,26 @@
+{
+    "activeFile": "world.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "tilemap.tsx": {
+            "scaleInDock": 1
+        },
+        "world.tmx": {
+            "scale": 0.44828124999999996,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1410.9445799930293,
+                "y": 1115.3712094806556
+            }
+        }
+    },
+    "openFiles": [
+        "world.tmx"
+    ],
+    "project": "superfighters.tiled-project",
+    "recentFiles": [
+        "world.tmx"
+    ]
+}

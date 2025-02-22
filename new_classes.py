@@ -197,7 +197,7 @@ class Player(Object):
 class Player2(Player):
     def __init__(self, position, image, collision_rects, instadeath, current_game):
         super().__init__(position, image, collision_rects, instadeath, current_game)
-        
+
     def input(self):
         keys = pygame.key.get_pressed()
         dx = 0
@@ -371,6 +371,41 @@ class Enemy(Object):
                 break
         
         return ground_below and edge_ahead
+
+
+    def load_navmesh(map_data):
+        nodes = {}  # {id: (x, y)}
+        edges = []  # [(node1, node2, cost)]
+        node_counter = 1  # Generate node IDs dynamically
+
+        for obj in map_data.objects:
+            if obj.name and "navedge" in obj.name.lower():  # Extract polylines
+                points = obj.polyline  # List of (x, y) points
+                
+                if len(points) >= 2:
+                    prev_node = None
+                    for point in points:
+                        existing_node = None
+                        for n, pos in nodes.items():
+                            if pos == point:
+                                existing_node = n
+                                break
+                        
+                        if existing_node:
+                            node_id = existing_node
+                        else:
+                            node_id = node_counter
+                            nodes[node_id] = point
+                            node_counter += 1
+                        
+                        # Connect nodes sequentially along the polyline
+                        if prev_node is not None:
+                            cost = math.dist(nodes[prev_node], nodes[node_id])  # Euclidean distance
+                            edges.append((prev_node, node_id, cost))
+                        
+                        prev_node = node_id  # Update last node for next connection
+
+        return nodes, edges
 
     def basic_motion(self):
         if self.check_jump() or self.jump_needed_collision:
