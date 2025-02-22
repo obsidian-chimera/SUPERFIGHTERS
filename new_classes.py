@@ -258,18 +258,59 @@ class Gun():
             self.bullet_group.add(bullet)
             self.now = pygame.time.get_ticks()
 
-class PriorityQueue:
-    def __init__(self):
-        self.elements = []
-    
-    def empty(self):
-        return len(self.elements) == 0
-    
-    def put(self, item, priority):
-        heapq.heappush(self.elements, (priority, item))
-    
-    def get(self):
-        return heapq.heappop(self.elements)[1]
+class Graph:
+    def __init__(self, nodes, edges):
+        self.nodes = nodes  # {id: (x, y)}
+        self.edges = {}
+        for node in nodes:
+            self.edges[node] = []
+            print(self.edges)
+        
+        for node1, node2, cost in edges:
+            self.edges[node1].append((node2, cost))
+            self.edges[node2].append((node1, cost))  # Bidirectional movement
+            print(f"Edge Added: {node1} <-> {node2} (Cost: {cost})")  # Debugging
+           
+
+    def heuristic(self, node1, node2):
+        x1, y1 = self.nodes[node1]
+        x2, y2 = self.nodes[node2]
+        return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5  
+
+    def astar(self, start, goal):
+        
+        open_set = []
+        heapq.heappush(open_set, (0, start))  
+
+        came_from = {}  
+        g_score = {node: float('inf') for node in self.nodes}  
+        f_score = {node: float('inf') for node in self.nodes}  
+
+        g_score[start] = 0  
+        f_score[start] = self.heuristic(start, goal)  
+
+        while len(open_set) > 0:  
+            _, current = heapq.heappop(open_set)  
+
+            if current == goal:  
+                path = []
+                while current in came_from:  
+                    path.append(current)
+                    current = came_from[current]
+                path.append(start)
+                return path[::-1]  
+
+            for neighbor, cost in self.edges[current]:
+                new_g_score = g_score[current] + cost  
+                if new_g_score < g_score[neighbor]:  
+                    came_from[neighbor] = current  
+                    g_score[neighbor] = new_g_score
+                    f_score[neighbor] = new_g_score + self.heuristic(neighbor, goal)  
+
+                    if (f_score[neighbor], neighbor) not in open_set:
+                        heapq.heappush(open_set, (f_score[neighbor], neighbor))
+
+        return None  # No path found
 
 class Enemy(Object):
     def __init__(self, position, image, collision_rects, instadeath, game, player):
@@ -291,13 +332,14 @@ class Enemy(Object):
         self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
         self.game = game
         self.player = player
-        self.path = []
 
         self.jump_needed_collision = False
+        self.graph = game.graph
+        self.path = []
 
     def distance(self, point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
-    
+   
     def gravity(self):
         if not self.on_ground:
             self.velocity_y += self.g_constant
@@ -373,55 +415,64 @@ class Enemy(Object):
         return ground_below and edge_ahead
 
 
-    def load_navmesh(map_data):
-        nodes = {}  # {id: (x, y)}
-        edges = []  # [(node1, node2, cost)]
-        node_counter = 1  # Generate node IDs dynamically
-
-        for obj in map_data.objects:
-            if obj.name and "navedge" in obj.name.lower():  # Extract polylines
-                points = obj.polyline  # List of (x, y) points
-                
-                if len(points) >= 2:
-                    prev_node = None
-                    for point in points:
-                        existing_node = None
-                        for n, pos in nodes.items():
-                            if pos == point:
-                                existing_node = n
-                                break
-                        
-                        if existing_node:
-                            node_id = existing_node
-                        else:
-                            node_id = node_counter
-                            nodes[node_id] = point
-                            node_counter += 1
-                        
-                        # Connect nodes sequentially along the polyline
-                        if prev_node is not None:
-                            cost = math.dist(nodes[prev_node], nodes[node_id])  # Euclidean distance
-                            edges.append((prev_node, node_id, cost))
-                        
-                        prev_node = node_id  # Update last node for next connection
-
-        return nodes, edges
-
-    def basic_motion(self):
-        if self.check_jump() or self.jump_needed_collision:
-            self.velocity_y = -15  # Apply jump force
-            self.move(self.direction * self.speed * 10, 0)
-            self.jump_needed_collision = False
-        else:
-            self.move(-(self.direction * self.speed), 0)
+    # def basic_motion(self):
+    #     if self.check_jump() or self.jump_needed_collision:
+    #         self.velocity_y = -15  # Apply jump force
+    #         self.move(self.direction * self.speed * 10, 0)
+    #         self.jump_needed_collision = False
+    #     else:
+    #         self.move(-(self.direction * self.speed), 0)
         
-        self.gravity()
+    #     self.gravity()
     
+    def get_nearest_node(self, position):
+        """Find the closest node to a given position."""
+        closest_node = None
+        min_distance = float('inf')
+        for node_id, node_pos in self.graph.nodes.items():
+            dist = self.distance(position, node_pos)
+            if dist < min_distance:
+                min_distance = dist
+                closest_node = node_id
+        return closest_node
+
+    def find_path_to_player(self):
+        """Find a path to the player's position using A*."""
+        start_node = self.get_nearest_node(self.rect.center)
+        goal_node = self.get_nearest_node(self.player.rect.center)
+
+        if start_node is not None and goal_node is not None:
+            new_path = self.graph.astar(start_node, goal_node)
+            if new_path:
+                self.path = [self.graph.nodes[node] for node in new_path]
+
+    def move_along_path(self):
+        """Move the enemy along the computed A* path."""
+        if self.path:
+            target_x, target_y = self.path[0]  # Next waypoint
+
+            dx = target_x - self.rect.centerx
+            dy = target_y - self.rect.centery
+            distance = math.sqrt(dx**2 + dy**2)
+
+            if distance > 5:  # Move towards the point
+                move_x = (dx / distance) * self.speed
+                move_y = (dy / distance) * self.speed
+                self.move(move_x, move_y)
+            else:
+                self.path.pop(0)  # Reached waypoint, move to next
+
+
+
+
     def update(self):
         self.instadeath()
         self.gravity()
         self.bullets.update()
-        self.basic_motion()
+        if not self.path or self.distance(self.rect.center, self.player.rect.center) > 100:
+            self.find_path_to_player()  # Recalculate path if player moved
+
+        self.move_along_path()
 
 
 

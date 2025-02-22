@@ -1,5 +1,6 @@
 from settings import *
 from new_classes import *
+from pathfinding import *
 import sys
 import pygame
 import pytmx
@@ -30,6 +31,8 @@ class Game:
         self.collision = []
         self.instadeath = []
         self.scale_factor = 1
+        self.nodes, self.edges = load_navmesh("./maps/world.tmx")
+        self.graph = Graph(self.nodes, self.edges)
 
     def start_screen(self, screen_colour, title_colour, resolution):
         self.buttons = []
