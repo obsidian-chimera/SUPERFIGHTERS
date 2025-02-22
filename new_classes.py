@@ -1,6 +1,7 @@
 import pygame
 import math
 import heapq
+from pathfinding import *
 from settings import *
 
 class Button:
@@ -258,60 +259,6 @@ class Gun():
             self.bullet_group.add(bullet)
             self.now = pygame.time.get_ticks()
 
-class Graph:
-    def __init__(self, nodes, edges):
-        self.nodes = nodes  # {id: (x, y)}
-        self.edges = {}
-        for node in nodes:
-            self.edges[node] = []
-            print(self.edges)
-        
-        for node1, node2, cost in edges:
-            self.edges[node1].append((node2, cost))
-            self.edges[node2].append((node1, cost))  # Bidirectional movement
-            print(f"Edge Added: {node1} <-> {node2} (Cost: {cost})")  # Debugging
-           
-
-    def heuristic(self, node1, node2):
-        x1, y1 = self.nodes[node1]
-        x2, y2 = self.nodes[node2]
-        return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5  
-
-    def astar(self, start, goal):
-        
-        open_set = []
-        heapq.heappush(open_set, (0, start))  
-
-        came_from = {}  
-        g_score = {node: float('inf') for node in self.nodes}  
-        f_score = {node: float('inf') for node in self.nodes}  
-
-        g_score[start] = 0  
-        f_score[start] = self.heuristic(start, goal)  
-
-        while len(open_set) > 0:  
-            _, current = heapq.heappop(open_set)  
-
-            if current == goal:  
-                path = []
-                while current in came_from:  
-                    path.append(current)
-                    current = came_from[current]
-                path.append(start)
-                return path[::-1]  
-
-            for neighbor, cost in self.edges[current]:
-                new_g_score = g_score[current] + cost  
-                if new_g_score < g_score[neighbor]:  
-                    came_from[neighbor] = current  
-                    g_score[neighbor] = new_g_score
-                    f_score[neighbor] = new_g_score + self.heuristic(neighbor, goal)  
-
-                    if (f_score[neighbor], neighbor) not in open_set:
-                        heapq.heappush(open_set, (f_score[neighbor], neighbor))
-
-        return None  # No path found
-
 class Enemy(Object):
     def __init__(self, position, image, collision_rects, instadeath, game, player):
         super().__init__(position, image)
@@ -415,15 +362,15 @@ class Enemy(Object):
         return ground_below and edge_ahead
 
 
-    # def basic_motion(self):
-    #     if self.check_jump() or self.jump_needed_collision:
-    #         self.velocity_y = -15  # Apply jump force
-    #         self.move(self.direction * self.speed * 10, 0)
-    #         self.jump_needed_collision = False
-    #     else:
-    #         self.move(-(self.direction * self.speed), 0)
+    def jump_motion(self):
+        if self.check_jump() or self.jump_needed_collision:
+            self.velocity_y = -15  # Apply jump force
+            self.move(self.direction * self.speed * 10, 0)
+            self.jump_needed_collision = False
+        else:
+            pass
         
-    #     self.gravity()
+        self.gravity()
     
     def get_nearest_node(self, position):
         """Find the closest node to a given position."""
@@ -434,6 +381,7 @@ class Enemy(Object):
             if dist < min_distance:
                 min_distance = dist
                 closest_node = node_id
+        print(closest_node)
         return closest_node
 
     def find_path_to_player(self):
@@ -463,15 +411,13 @@ class Enemy(Object):
                 self.path.pop(0)  # Reached waypoint, move to next
 
 
-
-
     def update(self):
         self.instadeath()
         self.gravity()
         self.bullets.update()
-        if not self.path or self.distance(self.rect.center, self.player.rect.center) > 100:
+        if not self.path or self.distance(self.rect.center, self.player.rect.center) > 5:
             self.find_path_to_player()  # Recalculate path if player moved
-
+        self.jump_motion()
         self.move_along_path()
 
 
