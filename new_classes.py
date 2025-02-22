@@ -274,7 +274,7 @@ class Enemy(Object):
         self.lives = 3
         self.health = 100
 
-        self.direction = 1
+        self.direction = -1
         self.bullets = pygame.sprite.Group()
         self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
         self.game = game
@@ -371,7 +371,7 @@ class Enemy(Object):
             pass
         
         self.gravity()
-    
+
     def get_nearest_node(self, position):
         """Find the closest node to a given position."""
         closest_node = None
@@ -381,7 +381,6 @@ class Enemy(Object):
             if dist < min_distance:
                 min_distance = dist
                 closest_node = node_id
-        print(closest_node)
         return closest_node
 
     def find_path_to_player(self):
@@ -389,36 +388,58 @@ class Enemy(Object):
         start_node = self.get_nearest_node(self.rect.center)
         goal_node = self.get_nearest_node(self.player.rect.center)
 
-        if start_node is not None and goal_node is not None:
-            new_path = self.graph.astar(start_node, goal_node)
-            if new_path:
-                self.path = [self.graph.nodes[node] for node in new_path]
+        if start_node is None or goal_node is None:
+            print("⚠️ No valid path! Start or Goal node not found.")
+            return
+
+        new_path = self.graph.astar(start_node, goal_node)
+        
+        if new_path:
+            self.path = [self.graph.nodes[node] for node in new_path]
+            print(f"🛣️ Path found: {self.path}")  # Debug path
+        else:
+            print("⚠️ No valid path!")
+
+
 
     def move_along_path(self):
         """Move the enemy along the computed A* path."""
         if self.path:
-            target_x, target_y = self.path[0]  # Next waypoint
-
+            target_x, target_y = self.path[0]  # Get the next waypoint
             dx = target_x - self.rect.centerx
             dy = target_y - self.rect.centery
             distance = math.sqrt(dx**2 + dy**2)
 
-            if distance > 5:  # Move towards the point
+            print(f"🎯 Moving to {target_x}, {target_y} | Distance: {distance}")
+
+            if distance > 30:  # Allow more tolerance (increased from 5)
                 move_x = (dx / distance) * self.speed
                 move_y = (dy / distance) * self.speed
                 self.move(move_x, move_y)
             else:
-                self.path.pop(0)  # Reached waypoint, move to next
+                print(f"✅ Reached waypoint {self.path[0]} - Removing from path")
+                self.path.pop(0)  # Remove the waypoint
 
+                # 🛠 Edge case: If stuck, force pop
+                if len(self.path) > 1 and self.distance(self.rect.center, self.path[0]) < 5:
+                    print("⚠️ Stuck at waypoint! Forcing pop")
+                    self.path.pop(0)  
+        else:
+            print("🛑 No waypoints left!")
+
+
+    
 
     def update(self):
-        self.instadeath()
+        # self.instadeath()
         self.gravity()
         self.bullets.update()
-        if not self.path or self.distance(self.rect.center, self.player.rect.center) > 5:
-            self.find_path_to_player()  # Recalculate path if player moved
         self.jump_motion()
         self.move_along_path()
+        if not self.path:
+            print("♻️ Recalculating path...")
+            self.find_path_to_player()  # Recalculate if no path
+        
 
 
 

@@ -224,6 +224,7 @@ class Game:
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
         self.render_map(self.screen, self.map)
+        self.graph.draw(self.screen)
         self.sprites.update()
         self.sprites.draw(self.screen)
 

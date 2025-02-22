@@ -1,3 +1,4 @@
+from settings import *
 import pygame
 import pytmx
 import math
@@ -12,7 +13,7 @@ def load_navmesh(filename):
 
     map_width = tmx_data.width * tmx_data.tilewidth
     map_height = tmx_data.height * tmx_data.tileheight
-    screen_width, screen_height = 1920, 1080
+    screen_width, screen_height = resolution
     scale_factor = min(screen_width / map_width, screen_height / map_height)
 
     for obj in tmx_data.objects:
@@ -124,16 +125,17 @@ class Graph:
                     if (f_score[neighbor], neighbor) not in open_set:
                         heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
+        print(path)
         return None  # No path found
 
 
-    def draw_graph(self, screen):
+    def draw(self, screen):
         """Visualize the graph using pygame"""
         for node, position in self.nodes.items():
-            pygame.draw.circle(screen, (0, 255, 0), position, 5)
+            pygame.draw.circle(screen, RED, position, 5)
         for node, neighbors in self.edges.items():
             for neighbor, _ in neighbors:
-                pygame.draw.line(screen, (255, 255, 255), self.nodes[node], self.nodes[neighbor], 2)
+                pygame.draw.line(screen, BLACK, self.nodes[node], self.nodes[neighbor], 2)
 
 # # Load navigation mesh from Tiled
 # nodes, edges = load_navmesh("./maps/world.tmx")
