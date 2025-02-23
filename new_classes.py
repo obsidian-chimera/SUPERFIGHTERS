@@ -274,7 +274,7 @@ class Enemy(Object):
         self.lives = 3
         self.health = 100
 
-        self.direction = -1
+        self.direction = 1
         self.bullets = pygame.sprite.Group()
         self.gun = Gun(self, self.bullets, collision_rects=self.collision_rects)
         self.game = game
@@ -283,6 +283,7 @@ class Enemy(Object):
         self.jump_needed_collision = False
         self.graph = game.graph
         self.path = []
+        self.frame_counter = 0
 
     def distance(self, point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
@@ -306,6 +307,7 @@ class Enemy(Object):
                 else:
                     print(f"Lives: {self.lives}")
                     self.rect.topleft = self.starting_position
+                    self.path = []
 
     def damage(self, damage):
         self.health -= damage
@@ -365,7 +367,7 @@ class Enemy(Object):
     def jump_motion(self):
         if self.check_jump() or self.jump_needed_collision:
             self.velocity_y = -15  # Apply jump force
-            self.move(self.direction * self.speed * 10, 0)
+            self.move(self.direction * self.speed * 20, 0)
             self.jump_needed_collision = False
         else:
             pass
@@ -412,7 +414,12 @@ class Enemy(Object):
 
             print(f"🎯 Moving to {target_x}, {target_y} | Distance: {distance}")
 
-            if distance > 30:  # Allow more tolerance (increased from 5)
+            if dx > 0:
+                self.direction = 1
+            elif dx < 0:
+                self.direction = -1
+
+            if distance > 100:  # Allow more tolerance (increased from 5)
                 move_x = (dx / distance) * self.speed
                 move_y = (dy / distance) * self.speed
                 self.move(move_x, move_y)
@@ -421,7 +428,7 @@ class Enemy(Object):
                 self.path.pop(0)  # Remove the waypoint
 
                 # 🛠 Edge case: If stuck, force pop
-                if len(self.path) > 1 and self.distance(self.rect.center, self.path[0]) < 5:
+                if len(self.path) > 1 and self.distance(self.rect.center, self.path[0]) < 100:
                     print("⚠️ Stuck at waypoint! Forcing pop")
                     self.path.pop(0)  
         else:
@@ -431,14 +438,16 @@ class Enemy(Object):
     
 
     def update(self):
-        # self.instadeath()
+        self.frame_counter += 1
+        self.instadeath()
         self.gravity()
         self.bullets.update()
         self.jump_motion()
         self.move_along_path()
-        if not self.path:
+        if not self.path or self.frame_counter > FRAMERATE and self.on_ground:
             print("♻️ Recalculating path...")
             self.find_path_to_player()  # Recalculate if no path
+            self.frame_counter = 0
         
 
 

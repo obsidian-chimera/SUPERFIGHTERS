@@ -47,7 +47,7 @@ def load_navmesh(filename):
                     prev_node = node_id  # Update last node for next connection
 
     # Auto-connect nodes if they are close but not connected
-    THRESHOLD = 50  # Adjust based on map scale
+    THRESHOLD = 30  # Adjust based on map scale
 
     for node1 in nodes:
         for node2 in nodes:
@@ -94,6 +94,7 @@ class Graph:
     def astar(self, start, goal):
         """A* pathfinding algorithm"""
         
+        path = []
         open_set = []
         heapq.heappush(open_set, (0, start))  
 
