@@ -161,7 +161,7 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor
 
-                self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+                self.collision.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
         
         for x, y, gid in self.map.get_layer_by_name("INSTADEATH"):
             if gid != 0:
@@ -170,7 +170,7 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor
 
-                self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+                self.instadeath.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
 
         for obj in self.map.objects:
             if obj.name == ("Enemy"):
@@ -210,7 +210,7 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor
 
-                self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+                self.collision.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
         
         for x, y, gid in self.map.get_layer_by_name("INSTADEATH"):
             if gid != 0:
@@ -219,7 +219,7 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor 
 
-                self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
+                self.instadeath.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
 
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)

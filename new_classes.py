@@ -15,7 +15,7 @@ class Button:
         self.text_width, self.text_height = self.surface.get_size()
         self.width = self.text_width + 20
         self.height = self.text_height + 20
-        self.rect = pygame.Rect(self.position, (self.width, self.height))
+        self.rect = pygame.FRect(self.position, (self.width, self.height))
 
         # Constructor method to setup attributes for the button
 
@@ -31,7 +31,7 @@ class box:
         self.size = size
         self.position = position
         self.colour = colour
-        self.rect = pygame.Rect(self.position, self.size)
+        self.rect = pygame.FRect(self.position, self.size)
         self.surface = pygame.Surface(self.size)
         self.surface.fill(self.colour)
         text_width, text_height = self.surface.get_size()
@@ -67,7 +67,7 @@ class Button:
         self.text_width, self.text_height = self.surface.get_size()
         self.width = self.text_width + 20
         self.height = self.text_height + 20
-        self.rect = pygame.Rect(self.position, (self.width, self.height))
+        self.rect = pygame.FRect(self.position, (self.width, self.height))
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.colour, self.rect)
@@ -80,7 +80,7 @@ class Box:
         self.size = size
         self.position = position
         self.colour = colour
-        self.rect = pygame.Rect(self.position, self.size)
+        self.rect = pygame.FRect(self.position, self.size)
         self.surface = pygame.Surface(self.size)
         self.surface.fill(self.colour)
 
@@ -91,7 +91,7 @@ class Object(pygame.sprite.Sprite):
     def __init__(self, position, image):
         super().__init__()
         self.image = image
-        self.rect = self.image.get_rect(topleft=position)
+        self.rect = self.image.get_frect(topleft=position)
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
@@ -221,7 +221,7 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface((10, 5))  
         self.image.fill(RED)
-        self.rect = self.image.get_rect(center=position)
+        self.rect = self.image.get_frect(center=position)
         self.speed = speed
         self.direction = direction 
         self.now = pygame.time.get_ticks()
