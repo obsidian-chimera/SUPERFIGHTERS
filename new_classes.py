@@ -419,7 +419,7 @@ class Enemy(Object):
             elif dx < 0:
                 self.direction = -1
 
-            if distance > 100:  # Allow more tolerance (increased from 5)
+            if distance > 50:  # Allow more tolerance (increased from 5)
                 move_x = (dx / distance) * self.speed
                 move_y = (dy / distance) * self.speed
                 self.move(move_x, move_y)
@@ -428,7 +428,7 @@ class Enemy(Object):
                 self.path.pop(0)  # Remove the waypoint
 
                 # 🛠 Edge case: If stuck, force pop
-                if len(self.path) > 1 and self.distance(self.rect.center, self.path[0]) < 100:
+                if len(self.path) > 1 and self.distance(self.rect.center, self.path[0]) < 50:
                     print("⚠️ Stuck at waypoint! Forcing pop")
                     self.path.pop(0)  
         else:

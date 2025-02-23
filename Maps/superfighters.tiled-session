@@ -8,6 +8,10 @@
     "expandedProjectPaths": [
         "."
     ],
+    "exportAsImage.drawObjectLabels": true,
+    "exportAsImage.drawTileGrid": true,
+    "exportAsImage.includeBackgroundColor": true,
+    "exportAsImage.useCurrentScale": true,
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/rraja/Documents/GitHub/5games/Platformer-20250208T123503Z-001/Platformer/Platform 4 finish/data/maps/world.tmx": {
