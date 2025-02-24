@@ -4,139 +4,125 @@ import pytmx
 import math
 import heapq
 
-def load_navmesh(filename):
-    tmx_data = pytmx.TiledMap(filename)
-    nodes = {}  # {id: (x, y)}
-    edges = []  # [(node1, node2, cost)]
-    node_counter = 1  # Generate node IDs dynamically
+def load_navmesh(file_name):
+    # Loads the navigation mesh from a Tiled map.
+    map_data = pytmx.TiledMap(file_name)
+    points_map = {}  # Stores each node's position {id: (x, y)}
+    links = []  # Stores connections between nodes [(node1, node2, cost)]
+    node_count = 1  # Auto-increment node ID
 
-
-    map_width = tmx_data.width * tmx_data.tilewidth
-    map_height = tmx_data.height * tmx_data.tileheight
+    # Get map dimensions and scale it to fit screen
+    map_width = map_data.width * map_data.tilewidth
+    map_height = map_data.height * map_data.tileheight
     screen_width, screen_height = resolution
-    scale_factor = min(screen_width / map_width, screen_height / map_height)
+    scale = min(screen_width / map_width, screen_height / map_height)
 
-    for obj in tmx_data.objects:
-        if obj.name == "navedge":  # Extract polylines
-            points = obj.points  # List of (x, y) points
+    # Go through objects in the map and find navigation edges
+    for obj in map_data.objects:
+        if obj.name == "navedge":  # Looking for navigation paths
+            path_points = obj.points  # List of (x, y) points
+            
+            if len(path_points) >= 2:
+                last_point = None
+                for point in path_points:
+                    # Scale the coordinates
+                    adjusted_point = (round(point[0] * scale), round(point[1] * scale))
 
-            if len(points) >= 2:
-                prev_node = None
-                for point in points:
-                    # Apply scale factor to (x, y) coordinates
-                    scaled_point = (round(point[0] * scale_factor), round(point[1] * scale_factor))
-
-                    existing_node = None
-                    for n, pos in nodes.items():
-                        if pos == scaled_point:
-                            existing_node = n
+                    existing_point = None
+                    for node, pos in points_map.items():
+                        if pos == adjusted_point:
+                            existing_point = node
                             break
-
-                    if existing_node:
-                        node_id = existing_node
+                    
+                    if existing_point:
+                        current_node = existing_point
                     else:
-                        node_id = node_counter
-                        nodes[node_id] = scaled_point
-                        node_counter += 1
+                        current_node = node_count
+                        points_map[current_node] = adjusted_point
+                        node_count += 1
 
-                    # Connect nodes sequentially along the polyline
-                    if prev_node is not None:
-                        cost = math.dist(nodes[prev_node], nodes[node_id])  # Euclidean distance
-                        edges.append((prev_node, node_id, cost))
+                    # Connect nodes along the polyline
+                    if last_point is not None:
+                        cost = math.dist(points_map[last_point], points_map[current_node])
+                        links.append((last_point, current_node, cost))
+                    
+                    last_point = current_node  # Move to the next point
 
-                    prev_node = node_id  # Update last node for next connection
+    # Auto-connect close nodes that aren’t linked
+    link_threshold = 100000  # Distance at which nodes should connect
+    for node_a in points_map:
+        for node_b in points_map:
+            if node_a != node_b:
+                distance = math.dist(points_map[node_a], points_map[node_b])
+                if distance < link_threshold and (node_a, node_b, distance) not in links and (node_b, node_a, distance) not in links:
+                    links.append((node_a, node_b, distance))
 
-    # Auto-connect nodes if they are close but not connected
-    THRESHOLD = 100  # Adjust based on map scale
-
-    for node1 in nodes:
-        for node2 in nodes:
-            if node1 != node2:
-                dist = math.dist(nodes[node1], nodes[node2])
-                if dist < THRESHOLD and (node1, node2, dist) not in edges and (node2, node1, dist) not in edges:
-                    edges.append((node1, node2, dist))
-                    # print(f"🔗 Auto-Connected {node1} <-> {node2} (Dist: {dist})")
-
-
-    # After loading nodes and edges:
-    # for node in nodes:
-    #     if node not in [edge[0] for edge in edges] and node not in [edge[1] for edge in edges]:
-    #         print(f"⚠️ Warning: Node {node} at {nodes[node]} has NO connections!")
-   
-    return nodes, edges
+    return points_map, links
 
 class Graph:
-    def __init__(self, nodes, edges):
-        self.nodes = nodes  # {id: (x, y)}
-        self.edges = {}
-        for node in nodes:
-            self.edges[node] = []
-            print(self.edges)
+    def __init__(self, points, links):
+        self.points = points  # {id: (x, y)}
+        self.connections = {node: [] for node in points}  # {id: [(other_node, cost)]}
         
-        for node1, node2, cost in edges:
-            self.edges[node1].append((node2, cost))
-            self.edges[node2].append((node1, cost))  # Bidirectional movement
-            # print(f"Edge Added: {node1} <-> {node2} (Cost: {cost})")  # Debugging
+        for node_a, node_b, cost in links:
+            self.connections[node_a].append((node_b, cost))
+            self.connections[node_b].append((node_a, cost))  # Bi-directional movement
 
-        # print("Nodes:", nodes)
-        # print("Edges:", edges)
-        # for node, neighbors in graph.edges.items():
-        #     print(f"Node {node} connects to {neighbors}")
-
-            
-
-    def heuristic(self, node1, node2):
-        """Calculates Euclidean distance between two nodes."""
-        x1, y1 = self.nodes[node1]
-        x2, y2 = self.nodes[node2]
+    def heuristic(self, node_a, node_b):
+        # Estimates the distance between two nodes (Euclidean distance).
+        x1, y1 = self.points[node_a]
+        x2, y2 = self.points[node_b]
         return ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5  
 
-    def astar(self, start, goal):
-        """A* pathfinding algorithm"""
-        
+    def astar(self, start, end):
+        # A* pathfinding algorithm to find the shortest path.
         path = []
-        open_set = []
-        heapq.heappush(open_set, (0, start))  
+        working_set = []
+        heapq.heappush(working_set, (0, start))  # Start node with priority 0
+        
+        origin = {}  # Stores the best previous node in the path
+        travel_cost = {}
+        total_cost = {}
 
-        came_from = {}  
-        g_score = {node: float('inf') for node in self.nodes}  
-        f_score = {node: float('inf') for node in self.nodes}  
+        # Initialize all nodes with infinite cost
+        for node in self.points:
+            travel_cost[node] = float('inf')  # Cost to reach each node
+            total_cost[node] = float('inf')  # Estimated cost to goal
 
-        g_score[start] = 0  
-        f_score[start] = self.heuristic(start, goal)  
+        # Start node has no travel cost, estimate total cost
+        travel_cost[start] = 0
+        total_cost[start] = self.heuristic(start, end)
 
-        while len(open_set) > 0:  
-            _, current = heapq.heappop(open_set)  
+        while len(working_set) > 0:  # Keep searching while there's something to check
+            _, current = heapq.heappop(working_set)  # Get the node with lowest total cost
 
-            if current == goal:  
-                path = []
-                while current in came_from:  
+            if current == end:  # If we reached the goal, reconstruct the path
+                while current in origin:
                     path.append(current)
-                    current = came_from[current]
+                    current = origin[current]
                 path.append(start)
-                return path[::-1]  
+                return path[::-1]  # Reverse the path to get the correct order
 
-            for neighbor, cost in self.edges[current]:
-                new_g_score = g_score[current] + cost  
-                if new_g_score < g_score[neighbor]:  
-                    came_from[neighbor] = current  
-                    g_score[neighbor] = new_g_score
-                    f_score[neighbor] = new_g_score + self.heuristic(neighbor, goal)  
+            for neighbor, cost in self.connections[current]:
+                new_cost = travel_cost[current] + cost  # Cost to move to neighbor
+                if new_cost < travel_cost[neighbor]:  # If it's a better route
+                    origin[neighbor] = current  # Remember where we came from
+                    travel_cost[neighbor] = new_cost
+                    total_cost[neighbor] = new_cost + self.heuristic(neighbor, end)
 
-                    if (f_score[neighbor], neighbor) not in open_set:
-                        heapq.heappush(open_set, (f_score[neighbor], neighbor))
+                    if (total_cost[neighbor], neighbor) not in working_set:
+                        heapq.heappush(working_set, (total_cost[neighbor], neighbor))
 
-        print(path)
         return None  # No path found
 
-
     def draw(self, screen):
-        """Visualize the graph using pygame"""
-        for node, position in self.nodes.items():
-            pygame.draw.circle(screen, RED, position, 5)
-        for node, neighbors in self.edges.items():
+        # Draws the navigation graph using pygame.
+        for node, position in self.points.items():
+            pygame.draw.circle(screen, RED, position, 5)  # Draw nodes
+        for node, neighbors in self.connections.items():
             for neighbor, _ in neighbors:
-                pygame.draw.line(screen, BLACK, self.nodes[node], self.nodes[neighbor], 2)
+                pygame.draw.line(screen, BLACK, self.points[node], self.points[neighbor], 2)  # Draw links
+
 
 # # Load navigation mesh from Tiled
 # nodes, edges = load_navmesh("./maps/world.tmx")

@@ -12,7 +12,7 @@ icon = pygame.image.load("./images/icon.png")  # Loads the image "icon.png" into
 icon = pygame.transform.scale(icon, (500, 500))
 display_list = pygame.display.get_desktop_sizes()  # Obtains resolutions of all the displays
 resolution = display_list[0]
-font = pygame.font.SysFont("Arial", 260, True)  # Added the titlefont
+font = pygame.font.SysFont("Arial", 230, True)  # Added the titlefont
 small_title = pygame.font.SysFont("Arial", 100, True)
 timer_font = pygame.font.Font(None, 36)
 
@@ -33,6 +33,8 @@ class Game:
         self.scale_factor = 1
         self.nodes, self.edges = load_navmesh("./maps/world.tmx")
         self.graph = Graph(self.nodes, self.edges)
+
+        self.debug_switch = False
 
     def start_screen(self, screen_colour, title_colour, resolution):
         self.buttons = []
@@ -149,7 +151,7 @@ class Game:
         for obj in self.map.objects:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
-                player_img = pygame.transform.scale(player_img, (40, 40))
+                player_img = pygame.transform.scale(player_img, (30, 30))
                 self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision, self.instadeath, self)
                 self.sprites.add(self.player)
 
@@ -175,7 +177,7 @@ class Game:
         for obj in self.map.objects:
             if obj.name == ("Enemy"):
                 enemy_img = pygame.image.load("./images/enemy.webp").convert_alpha()
-                enemy_img = pygame.transform.scale(enemy_img, (40, 40))
+                enemy_img = pygame.transform.scale(enemy_img, (30, 30))
                 enemy = Enemy((obj.x * self.scale_factor, obj.y * self.scale_factor), enemy_img, self.collision, self.instadeath, self, self.player)
                 self.sprites.add(enemy)
 
@@ -210,7 +212,7 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor
 
-                self.collision.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
+                self.collision.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
         
         for x, y, gid in self.map.get_layer_by_name("INSTADEATH"):
             if gid != 0:
@@ -219,12 +221,12 @@ class Game:
                 rect_width = self.map.tilewidth * self.scale_factor
                 rect_height = self.map.tileheight * self.scale_factor 
 
-                self.instadeath.append(pygame.FRect(rect_x, rect_y, rect_width, rect_height))
+                self.instadeath.append(pygame.Rect(rect_x, rect_y, rect_width, rect_height))
 
     def gameplay_screen(self):
         self.screen.fill(BACKGROUND)
         self.render_map(self.screen, self.map)
-        self.graph.draw(self.screen)
+
         self.sprites.update()
         self.sprites.draw(self.screen)
 
@@ -234,11 +236,12 @@ class Game:
                 player.bullets.update()
                 player.bullets.draw(self.screen)
 
-
-        for rect in self.collision:
-            pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
-        for rect in self.instadeath:
-            pygame.draw.rect(self.screen, (0, 0, 255), rect, 2)
+        if self.debug_switch:
+            self.graph.draw(self.screen)
+            for rect in self.collision:
+                pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
+            for rect in self.instadeath:
+                pygame.draw.rect(self.screen, (0, 0, 255), rect, 2)
 
     def run(self):
         screen_selector = "start"

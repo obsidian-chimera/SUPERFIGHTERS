@@ -26,8 +26,8 @@
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1243.939393939394,
-                "y": 719.6969696969697
+                "x": 1201.5151515151515,
+                "y": 874.2424242424244
             }
         },
         "storage_map.tsx": {
@@ -39,10 +39,10 @@
         },
         "world.tmx": {
             "scale": 0.33,
-            "selectedLayer": 0,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 1080.3030303030303,
-                "y": 1000
+                "x": 1919.6969696969695,
+                "y": 536.3636363636364
             }
         }
     },
@@ -60,9 +60,9 @@
     "project": "superfighters.tiled-project",
     "property.type": "string",
     "recentFiles": [
-        "storage_map.tsx",
         "base_map.tmx",
-        "world.tmx"
+        "world.tmx",
+        "storage_map.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
