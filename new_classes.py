@@ -155,11 +155,16 @@ class Player(Object):
         if keys[pygame.K_d]:
             dx = self.speed
             self.direction = 1
+        if keys[pygame.K_w] and self.on_ground:
+            self.velocity_y = -15
+            self.on_ground = False
         if keys[pygame.K_SPACE] and self.on_ground:
             self.velocity_y = -15
             self.on_ground = False
         if keys[pygame.K_LCTRL]:
             self.gun.shoot()
+        if keys[pygame.K_r]:
+            self.lives = LIVES
 
         self.move(dx, 0)
 
@@ -213,6 +218,8 @@ class Player2(Player):
             self.on_ground = False
         if keys[pygame.K_RCTRL]:
             self.gun.shoot()
+        if keys[pygame.K_r]:
+            self.lives = LIVES
 
         self.move(dx, 0)
 
@@ -285,6 +292,8 @@ class Enemy(Object):
         self.path = []
         self.frame_counter = 0
 
+        self.debug_switch = False
+
     def distance(self, point1, point2):
         return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
    
@@ -324,27 +333,29 @@ class Enemy(Object):
     def move(self, dx=0, dy=0):
         # Horizontal collisions
         self.rect.x += dx
-        for rect in self.collision_rects:
-            # self.jump_needed_collision = False
-            if self.rect.colliderect(rect):
-                if dx > 0:
-                    self.rect.right = rect.left
-                    self.jump_needed_collision = True
-                elif dx < 0:
-                    self.rect.left = rect.right
-                    self.jump_needed_collision = True
+        if not self.debug_switch:
+            for rect in self.collision_rects:
+                # self.jump_needed_collision = False
+                if self.rect.colliderect(rect):
+                    if dx > 0:
+                        self.rect.right = rect.left
+                        self.jump_needed_collision = True
+                    elif dx < 0:
+                        self.rect.left = rect.right
+                        self.jump_needed_collision = True
         
         # Vertical collisions
         self.rect.y += dy
-        for rect in self.collision_rects:
-            if self.rect.colliderect(rect):
-                if dy > 0:
-                    self.rect.bottom = rect.top
-                    self.on_ground = True
-                    self.velocity_y = 0
-                elif dy < 0:
-                    self.rect.top = rect.bottom
-                    self.velocity_y = 0
+        if not self.debug_switch:
+            for rect in self.collision_rects:
+                if self.rect.colliderect(rect):
+                    if dy > 0:
+                        self.rect.bottom = rect.top
+                        self.on_ground = True
+                        self.velocity_y = 0
+                    elif dy < 0:
+                        self.rect.top = rect.bottom
+                        self.velocity_y = 0
 
     def check_jump(self):
         # Check if there's ground directly below
@@ -439,10 +450,11 @@ class Enemy(Object):
 
     def update(self):
         self.frame_counter += 1
-        self.instadeath()
-        self.gravity()
+        if not self.debug_switch:
+            self.instadeath()
+            self.gravity()
+            self.jump_motion()
         self.bullets.update()
-        self.jump_motion()
         self.move_along_path()
         if not self.path or self.frame_counter > FRAMERATE and self.on_ground:
             print("Recalculating path")

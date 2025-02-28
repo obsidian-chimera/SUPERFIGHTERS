@@ -49,7 +49,7 @@ def load_navmesh(file_name):
                     last_point = current_node  # Move to the next point
 
     # Auto-connect close nodes that aren’t linked
-    link_threshold = 100000  # Distance at which nodes should connect
+    link_threshold = 100  # Distance at which nodes should connect
     for node_a in points_map:
         for node_b in points_map:
             if node_a != node_b:

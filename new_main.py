@@ -34,7 +34,7 @@ class Game:
         self.nodes, self.edges = load_navmesh("./maps/world.tmx")
         self.graph = Graph(self.nodes, self.edges)
 
-        self.debug_switch = False
+        self.debug_switch = True
 
     def start_screen(self, screen_colour, title_colour, resolution):
         self.buttons = []
@@ -193,14 +193,14 @@ class Game:
         for obj in self.map.objects:
             if obj.name == 'Player':
                 player_img = pygame.image.load("./images/player.webp").convert_alpha()
-                player_img = pygame.transform.scale(player_img, (40, 40))
+                player_img = pygame.transform.scale(player_img, (30, 30))
                 self.player = Player((obj.x * self.scale_factor, obj.y * self.scale_factor), player_img, self.collision, self.instadeath, self)
                 self.sprites.add(self.player)
         
         for obj in self.map.objects:
             if obj.name == 'Player2':
                 player2_img = pygame.image.load("./images/old_player.webp").convert_alpha()
-                player2_img = pygame.transform.scale(player2_img, (40, 40))
+                player2_img = pygame.transform.scale(player2_img, (30, 30))
                 self.player2 = Player2((obj.x * self.scale_factor, obj.y * self.scale_factor), player2_img, self.collision, self.instadeath, self)
                 self.sprites.add(self.player2)
 
