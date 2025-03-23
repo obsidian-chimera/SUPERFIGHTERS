@@ -3,10 +3,13 @@ import pygame
 import pytmx
 import math
 import heapq
+import os
+import sys
+from new_main import resource_path
 
 def load_navmesh(file_name):
     # Loads the navigation mesh from a Tiled map.
-    map_data = pytmx.TiledMap(file_name)
+    map_data = pytmx.TiledMap(resource_path(file_name))
     points_map = {}  # Stores each node's position {id: (x, y)}
     links = []  # Stores connections between nodes [(node1, node2, cost)]
     node_count = 1  # Auto-increment node ID
@@ -48,14 +51,14 @@ def load_navmesh(file_name):
                     
                     last_point = current_node  # Move to the next point
 
-    # Auto-connect close nodes that aren’t linked
-    link_threshold = 100  # Distance at which nodes should connect
-    for node_a in points_map:
-        for node_b in points_map:
-            if node_a != node_b:
-                distance = math.dist(points_map[node_a], points_map[node_b])
-                if distance < link_threshold and (node_a, node_b, distance) not in links and (node_b, node_a, distance) not in links:
-                    links.append((node_a, node_b, distance))
+    # # Auto-connect close nodes that aren’t linked
+    # link_threshold = 10000  # Distance at which nodes should connect
+    # for node_a in points_map:
+    #     for node_b in points_map:
+    #         if node_a != node_b:
+    #             distance = math.dist(points_map[node_a], points_map[node_b])
+    #             if distance < link_threshold and (node_a, node_b, distance) not in links and (node_b, node_a, distance) not in links:
+    #                 links.append((node_a, node_b, distance))
 
     return points_map, links
 
@@ -77,8 +80,8 @@ class Graph:
     def astar(self, start, end):
         # A* pathfinding algorithm to find the shortest path.
         path = []
-        working_set = []
-        heapq.heappush(working_set, (0, start))  # Start node with priority 0
+        current_set = []
+        heapq.heappush(current_set, (0, start))  # Start node with priority 0
         
         origin = {}  # Stores the best previous node in the path
         travel_cost = {}
@@ -93,8 +96,8 @@ class Graph:
         travel_cost[start] = 0
         total_cost[start] = self.heuristic(start, end)
 
-        while len(working_set) > 0:  # Keep searching while there's something to check
-            _, current = heapq.heappop(working_set)  # Get the node with lowest total cost
+        while len(current_set) > 0:  # Keep searching while there's something to check
+            _, current = heapq.heappop(current_set)  # Get the node with lowest total cost
 
             if current == end:  # If we reached the goal, reconstruct the path
                 while current in origin:
@@ -103,15 +106,15 @@ class Graph:
                 path.append(start)
                 return path[::-1]  # Reverse the path to get the correct order
 
-            for neighbor, cost in self.connections[current]:
-                new_cost = travel_cost[current] + cost  # Cost to move to neighbor
-                if new_cost < travel_cost[neighbor]:  # If it's a better route
-                    origin[neighbor] = current  # Remember where we came from
-                    travel_cost[neighbor] = new_cost
-                    total_cost[neighbor] = new_cost + self.heuristic(neighbor, end)
+            for adjacent, cost in self.connections[current]:
+                new_cost = travel_cost[current] + cost  # Cost to move to adjacent
+                if new_cost < travel_cost[adjacent]:  # If it's a better route
+                    origin[adjacent] = current  # Remember where we came from
+                    travel_cost[adjacent] = new_cost
+                    total_cost[adjacent] = new_cost + self.heuristic(adjacent, end)
 
-                    if (total_cost[neighbor], neighbor) not in working_set:
-                        heapq.heappush(working_set, (total_cost[neighbor], neighbor))
+                    if (total_cost[adjacent], adjacent) not in current_set:
+                        heapq.heappush(current_set, (total_cost[adjacent], adjacent))
 
         return None  # No path found
 
@@ -119,9 +122,9 @@ class Graph:
         # Draws the navigation graph using pygame.
         for node, position in self.points.items():
             pygame.draw.circle(screen, RED, position, 5)  # Draw nodes
-        for node, neighbors in self.connections.items():
-            for neighbor, _ in neighbors:
-                pygame.draw.line(screen, BLACK, self.points[node], self.points[neighbor], 2)  # Draw links
+        for node, adjacents in self.connections.items():
+            for adjacent, _ in adjacents:
+                pygame.draw.line(screen, BLACK, self.points[node], self.points[adjacent], 2)  # Draw links
 
 
 # # Load navigation mesh from Tiled

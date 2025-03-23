@@ -3,15 +3,15 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "world.tmx",
+    "activeFile": "world - Copy.tmx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
     ],
     "exportAsImage.drawObjectLabels": true,
-    "exportAsImage.drawTileGrid": true,
-    "exportAsImage.includeBackgroundColor": true,
-    "exportAsImage.useCurrentScale": true,
+    "exportAsImage.drawTileGrid": false,
+    "exportAsImage.includeBackgroundColor": false,
+    "exportAsImage.useCurrentScale": false,
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/rraja/Documents/GitHub/5games/Platformer-20250208T123503Z-001/Platformer/Platform 4 finish/data/maps/world.tmx": {
@@ -26,23 +26,47 @@
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 1201.5151515151515,
-                "y": 874.2424242424244
+                "x": 1304.5454545454545,
+                "y": 289.3939393939394
             }
         },
         "storage_map.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "tilemap.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
-        "world.tmx": {
-            "scale": 0.33,
-            "selectedLayer": 5,
+        "world - Copy.tmx": {
+            "scale": 0.3796701388888889,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 1919.6969696969695,
-                "y": 536.3636363636364
+                "x": 1439.4073803100277,
+                "y": 799.3781151401528
+            }
+        },
+        "world - copy.tmx": {
+            "scale": 0.3796701388888889,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1439.407380310028,
+                "y": 800.6950477845352
+            }
+        },
+        "world.tmx": {
+            "expandedGroupLayers": [
+                14
+            ],
+            "expandedObjectLayers": [
+                11
+            ],
+            "scale": 0.33,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1440.909090909091,
+                "y": 803.030303030303
             }
         }
     },
@@ -55,13 +79,15 @@
     "map.width": 64,
     "openFiles": [
         "base_map.tmx",
-        "world.tmx"
+        "world.tmx",
+        "world - Copy.tmx"
     ],
     "project": "superfighters.tiled-project",
-    "property.type": "string",
+    "property.type": "object",
     "recentFiles": [
-        "base_map.tmx",
         "world.tmx",
+        "world - Copy.tmx",
+        "base_map.tmx",
         "storage_map.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

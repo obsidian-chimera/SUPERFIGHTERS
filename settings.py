@@ -13,3 +13,5 @@ TILE_SIZE = 64
 display_list = pygame.display.get_desktop_sizes() #Obtains resolutions of all the displays
 resolution = display_list[0]
 LIVES = 3
+KILL_XP = 100
+DAMAGE_XP = 10
